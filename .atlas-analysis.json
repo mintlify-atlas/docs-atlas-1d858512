@@ -1,0 +1,87 @@
+{
+  "projectType": "frontend",
+  "projectName": "DriveLoop Mobile",
+  "projectDescription": "A React Native mobile application built with Expo featuring authentication and dashboard functionality",
+  "theme": "palm",
+  "primaryColor": "#7c7c7c",
+  "lightColor": "#0a0a0a",
+  "darkColor": "#c9c9c9",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/routing",
+              "concepts/styling",
+              "concepts/components"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/authentication",
+              "guides/navigation",
+              "guides/theming"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Components",
+        "groups": [
+          {
+            "group": "UI Components",
+            "pages": [
+              "components/custom-button",
+              "components/custom-input",
+              "components/menu-card",
+              "components/screen-layout",
+              "components/logo"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Screens",
+        "groups": [
+          {
+            "group": "App Screens",
+            "pages": [
+              "screens/login",
+              "screens/register",
+              "screens/dashboard"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "User authentication with login and registration",
+    "File-based routing with Expo Router",
+    "Custom UI components with NativeWind styling",
+    "Responsive dashboard interface",
+    "Custom theming with Tailwind CSS"
+  ],
+  "publicApiSurface": [
+    "CustomButton",
+    "CustomInput",
+    "MenuCard",
+    "ScreenLayout",
+    "Logo",
+    "/login",
+    "/register",
+    "/dashboard"
+  ]
+}
