@@ -1,0 +1,196 @@
+---
+title: 'Dashboard Screen'
+description: 'Main navigation hub with menu options for authenticated users'
+icon: 'grid-2'
+---
+
+## Overview
+
+The Dashboard screen serves as the main navigation hub after successful authentication. It provides quick access to key app features through large, icon-based menu cards.
+
+**Route Path:** `/dashboard`
+
+<Note>
+  Users are redirected to this screen after successful login using `router.replace('/dashboard')` from the Login screen.
+</Note>
+
+## Screen Structure
+
+<Steps>
+  <Step title="Logo Display">
+    Shows the DriveLoop logo at the top with consistent branding.
+  </Step>
+  
+  <Step title="Menu Cards Grid">
+    Displays interactive cards for main app sections organized in a vertical layout.
+  </Step>
+</Steps>
+
+## Components Used
+
+<CardGroup cols={2}>
+  <Card title="ScreenLayout" icon="layout">
+    Wraps the screen with custom padding (4 instead of default 6).
+  </Card>
+  
+  <Card title="Logo" icon="image">
+    Displays the DriveLoop branding logo.
+  </Card>
+  
+  <Card title="MenuCard" icon="square">
+    Large interactive cards for navigation to main features.
+  </Card>
+</CardGroup>
+
+## Menu Options
+
+The dashboard currently features two main menu cards:
+
+### Account Configuration
+```tsx
+<MenuCard
+    title="Configuración de cuenta"
+    Icon={User}
+    onPress={() => console.log('Configuración press')}
+/>
+```
+
+<Card title="Configuración de cuenta" icon="user">
+  **Icon:** User (from lucide-react-native)  
+  **Purpose:** Navigate to account settings and profile management
+</Card>
+
+### Documents
+```tsx
+<MenuCard
+    title="Documentos"
+    Icon={FileText}
+    onPress={() => console.log('Documentos press')}
+/>
+```
+
+<Card title="Documentos" icon="file-text">
+  **Icon:** FileText (from lucide-react-native)  
+  **Purpose:** Access and manage user documents
+</Card>
+
+<Info>
+  Menu card actions currently log to console. In production, these should navigate to their respective feature screens.
+</Info>
+
+## MenuCard Component
+
+The `MenuCard` component creates large, touchable cards with icons:
+
+```tsx
+interface MenuCardProps {
+    title: string;
+    Icon: LucideIcon;
+    onPress?: () => void;
+}
+```
+
+### MenuCard Features
+- **Large Icon:** 64px Lucide icons in brand color (#C91843)
+- **Centered Layout:** Icon and text centered within the card
+- **Interactive Feedback:** Active state changes background to gray-50
+- **Bordered Design:** Subtle border with primary color at 20% opacity
+- **Shadow Effect:** Soft shadow for depth
+- **Rounded Corners:** `rounded-2xl` for modern appearance
+
+### MenuCard Styling
+```tsx
+className="flex-1 border border-primary/20 bg-white rounded-2xl p-6 items-center shadow-sm active:bg-gray-50 m-2"
+```
+
+## Icon Library
+
+The dashboard uses **Lucide React Native** for menu icons:
+
+```tsx
+import { FileText, User } from 'lucide-react-native';
+```
+
+<Note>
+  Lucide icons are passed as components to MenuCard, which renders them with consistent size (64) and color (#C91843).
+</Note>
+
+## Layout Structure
+
+```tsx
+<ScreenLayout paddingHorizontal={4}>
+    <Logo className="mt-8 mb-12" />
+
+    <View className="space-y-4">
+        <View className="flex-row">
+            <MenuCard
+                title="Configuración de cuenta"
+                Icon={User}
+                onPress={() => console.log('Configuración press')}
+            />
+        </View>
+
+        <View className="flex-row">
+            <MenuCard
+                title="Documentos"
+                Icon={FileText}
+                onPress={() => console.log('Documentos press')}
+            />
+        </View>
+    </View>
+</ScreenLayout>
+```
+
+### Layout Details
+
+- **ScreenLayout:** Uses `paddingHorizontal={4}` (16px) instead of default 6 (24px)
+- **Logo Spacing:** `mt-8 mb-12` for prominent placement
+- **Menu Container:** `space-y-4` for vertical spacing between cards
+- **Card Rows:** Each `MenuCard` wrapped in `flex-row` View for potential multi-column layouts
+
+## Customization Options
+
+The dashboard is designed for easy expansion:
+
+<Steps>
+  <Step title="Add New Menu Items">
+    Import additional Lucide icons and create new MenuCard instances.
+  </Step>
+  
+  <Step title="Multi-Column Layout">
+    Place multiple MenuCards within a single `flex-row` View for side-by-side cards.
+  </Step>
+  
+  <Step title="Navigation Integration">
+    Replace console.log with router navigation to feature screens.
+  </Step>
+</Steps>
+
+## Future Enhancements
+
+Potential additions to the dashboard:
+
+- User profile information at the top
+- Quick stats or notifications
+- Recent activity section
+- More menu options as features are added
+- Multi-column grid layout for tablets
+- Logout functionality
+
+## Styling
+
+Key styling patterns:
+
+- **Consistent Spacing:** Uses margin utilities for rhythm
+- **Brand Colors:** Primary color (#C91843) used for icons and borders
+- **Modern Design:** Rounded corners and subtle shadows
+- **Touch Feedback:** Active states for better UX
+- **Responsive Layout:** Flex-based layout adapts to screen sizes
+
+## Source Code
+
+Location: `app/dashboard.tsx`
+
+<Info>
+  The dashboard demonstrates a clean, scalable pattern for main navigation menus in React Native applications.
+</Info>

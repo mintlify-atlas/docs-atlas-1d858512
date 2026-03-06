@@ -1,0 +1,464 @@
+---
+title: "Component Architecture"
+description: "Understanding the reusable component patterns in DriveLoop Mobile"
+icon: "cube"
+---
+
+DriveLoop Mobile follows a component-based architecture with reusable UI components in the `components/` directory. Each component is built with TypeScript for type safety and uses NativeWind for styling.
+
+## Component Structure
+
+```
+components/
+├── CustomButton.tsx    # Primary action button
+├── CustomInput.tsx     # Form input with icon support
+├── Logo.tsx           # Brand logo component
+├── MenuCard.tsx       # Dashboard menu cards
+└── ScreenLayout.tsx   # Screen wrapper with safe area
+```
+
+## Core Components
+
+<Tabs>
+  <Tab title="CustomButton">
+    A reusable button component with consistent brand styling (`components/CustomButton.tsx:1-20`):
+
+    ```tsx components/CustomButton.tsx
+    import React from 'react';
+    import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+
+    interface CustomButtonProps extends TouchableOpacityProps {
+        title: string;
+    }
+
+    const CustomButton = ({ title, ...props }: CustomButtonProps) => {
+        return (
+            <TouchableOpacity
+                className="bg-primary rounded-full py-4 items-center shadow-md active:opacity-80"
+                {...props}
+            >
+                <Text className="text-white text-lg font-roboto-bold">
+                    {title}
+                </Text>
+            </TouchableOpacity>
+        );
+    };
+
+    export default CustomButton;
+    ```
+
+    **Features:**
+    - Extends `TouchableOpacityProps` for full TouchableOpacity functionality
+    - Consistent primary brand color styling
+    - Pill-shaped with rounded-full corners
+    - Press feedback with opacity change
+
+    **Usage:**
+    ```tsx
+    <CustomButton 
+        title="Iniciar sesión" 
+        onPress={() => router.replace('/dashboard')} 
+    />
+    ```
+  </Tab>
+
+  <Tab title="CustomInput">
+    A form input component with optional icon support (`components/CustomInput.tsx:1-22`):
+
+    ```tsx components/CustomInput.tsx
+    import React from 'react';
+    import { TextInput, TextInputProps, View } from 'react-native';
+
+    interface CustomInputProps extends TextInputProps {
+        icon?: React.ReactNode;
+    }
+
+    const CustomInput = ({ icon, ...props }: CustomInputProps) => {
+        return (
+            <View className="flex-row items-center border-b border-gray-300 py-2 mb-4">
+                {icon && <View className="mr-3">{icon}</View>}
+                <TextInput
+                    className="flex-1 text-base font-roboto-light text-secondary"
+                    placeholderTextColor="#9CA3AF"
+                    {...props}
+                />
+            </View>
+        );
+    };
+
+    export default CustomInput;
+    ```
+
+    **Features:**
+    - Optional icon rendering (e.g., MaterialIcons)
+    - Underline border style
+    - Flexible TextInput with spread props
+    - Consistent typography
+
+    **Usage:**
+    ```tsx
+    <CustomInput
+        placeholder="Correo electrónico"
+        keyboardType="email-address"
+        icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+    />
+
+    <CustomInput
+        placeholder="Contraseña"
+        secureTextEntry
+        icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+    />
+    ```
+  </Tab>
+
+  <Tab title="Logo">
+    A flexible logo component with customizable dimensions (`components/Logo.tsx:1-26`):
+
+    ```tsx components/Logo.tsx
+    import React from 'react';
+    import { Image, View, ViewProps } from 'react-native';
+
+    interface LogoProps extends ViewProps {
+        width?: number | string;
+        height?: number | string;
+    }
+
+    const Logo = ({ width = 192, height = 96, style, ...props }: LogoProps) => {
+        return (
+            <View className="items-center" style={style} {...props}>
+                <Image
+                    source={require('../assets/images/logo.png')}
+                    style={{
+                        width: typeof width === 'number' ? width : undefined,
+                        height: typeof height === 'number' ? height : undefined
+                    }}
+                    className={typeof width === 'string' ? width : ''}
+                    resizeMode="contain"
+                />
+            </View>
+        );
+    };
+
+    export default Logo;
+    ```
+
+    **Features:**
+    - Configurable width and height (number or string)
+    - Centered by default
+    - Responsive image sizing with `resizeMode="contain"`
+    - Supports className prop when width is a string
+
+    **Usage:**
+    ```tsx
+    <Logo className="mt-10 mb-12" />
+    <Logo width={150} height={75} />
+    ```
+  </Tab>
+
+  <Tab title="MenuCard">
+    An interactive card component for dashboard menus (`components/MenuCard.tsx:1-28`):
+
+    ```tsx components/MenuCard.tsx
+    import { LucideIcon } from 'lucide-react-native';
+    import React from 'react';
+    import { Text, TouchableOpacity, View } from 'react-native';
+
+    interface MenuCardProps {
+        title: string;
+        Icon: LucideIcon;
+        onPress?: () => void;
+    }
+
+    const MenuCard = ({ title, Icon, onPress }: MenuCardProps) => {
+        return (
+            <TouchableOpacity
+                onPress={onPress}
+                className="flex-1 border border-primary/20 bg-white rounded-2xl p-6 items-center shadow-sm active:bg-gray-50 m-2"
+            >
+                <View className="mb-4">
+                    <Icon size={64} color="#C91843" strokeWidth={1.5} />
+                </View>
+                <Text className="text-secondary font-roboto-bold text-center text-lg">
+                    {title}
+                </Text>
+            </TouchableOpacity>
+        );
+    };
+
+    export default MenuCard;
+    ```
+
+    **Features:**
+    - Uses Lucide React Native icons
+    - Card design with subtle border and shadow
+    - Press feedback with background color change
+    - Centered icon and text layout
+
+    **Usage:**
+    ```tsx
+    import { User, FileText } from 'lucide-react-native';
+
+    <MenuCard
+        title="Configuración de cuenta"
+        Icon={User}
+        onPress={() => console.log('Configuración press')}
+    />
+
+    <MenuCard
+        title="Documentos"
+        Icon={FileText}
+        onPress={() => console.log('Documentos press')}
+    />
+    ```
+  </Tab>
+
+  <Tab title="ScreenLayout">
+    A consistent screen wrapper with safe area handling (`components/ScreenLayout.tsx:1-27`):
+
+    ```tsx components/ScreenLayout.tsx
+    import React from 'react';
+    import { ScrollView, View } from 'react-native';
+    import { SafeAreaView } from 'react-native-safe-area-context';
+
+    interface ScreenLayoutProps {
+        children: React.ReactNode;
+        scrollable?: boolean;
+        paddingHorizontal?: number;
+    }
+
+    const ScreenLayout = ({ 
+        children, 
+        scrollable = true, 
+        paddingHorizontal = 6 
+    }: ScreenLayoutProps) => {
+        const Container = scrollable ? ScrollView : View;
+
+        return (
+            <SafeAreaView className="flex-1 bg-white">
+                <Container
+                    contentContainerStyle={scrollable ? { flexGrow: 1 } : undefined}
+                    className={`flex-1 px-${paddingHorizontal}`}
+                >
+                    {children}
+                </Container>
+            </SafeAreaView>
+        );
+    };
+
+    export default ScreenLayout;
+    ```
+
+    **Features:**
+    - Safe area handling for notches and home indicators
+    - Optional scrollable behavior (default: true)
+    - Configurable horizontal padding
+    - Dynamic container switching (ScrollView vs View)
+
+    **Usage:**
+    ```tsx
+    // Scrollable screen (default)
+    <ScreenLayout>
+        <Logo className="mt-10 mb-12" />
+        {/* Screen content */}
+    </ScreenLayout>
+
+    // Non-scrollable with custom padding
+    <ScreenLayout paddingHorizontal={4}>
+        <Logo className="mt-8 mb-12" />
+        {/* Dashboard cards */}
+    </ScreenLayout>
+    ```
+  </Tab>
+</Tabs>
+
+## Design Patterns
+
+<Accordion title="Component Extension Pattern">
+  All components extend native React Native component props using TypeScript interfaces:
+
+  ```tsx
+  // Extends TouchableOpacityProps
+  interface CustomButtonProps extends TouchableOpacityProps {
+      title: string;
+  }
+
+  // Extends TextInputProps
+  interface CustomInputProps extends TextInputProps {
+      icon?: React.ReactNode;
+  }
+
+  // Extends ViewProps
+  interface LogoProps extends ViewProps {
+      width?: number | string;
+      height?: number | string;
+  }
+  ```
+
+  This pattern allows:
+  - Full access to native component properties
+  - Type safety with TypeScript
+  - Easy customization with spread operator (`{...props}`)
+</Accordion>
+
+<Accordion title="Prop Spreading Pattern">
+  Components use the spread operator to pass through all additional props:
+
+  ```tsx
+  const CustomButton = ({ title, ...props }: CustomButtonProps) => {
+      return (
+          <TouchableOpacity {...props}>
+              <Text>{title}</Text>
+          </TouchableOpacity>
+      );
+  };
+  ```
+
+  This enables:
+  - Flexible component usage
+  - Access to all native component features
+  - Cleaner component APIs
+</Accordion>
+
+<Accordion title="Conditional Rendering Pattern">
+  Components use conditional rendering for optional features:
+
+  ```tsx
+  // Optional icon in CustomInput
+  {icon && <View className="mr-3">{icon}</View>}
+
+  // Dynamic container in ScreenLayout
+  const Container = scrollable ? ScrollView : View;
+  ```
+</Accordion>
+
+<Accordion title="Default Props Pattern">
+  Components provide sensible defaults with destructuring:
+
+  ```tsx
+  const ScreenLayout = ({ 
+      children, 
+      scrollable = true,        // Default: scrollable
+      paddingHorizontal = 6     // Default: px-6
+  }: ScreenLayoutProps) => {
+      // ...
+  };
+  ```
+</Accordion>
+
+## Real-World Usage Example
+
+Here's how components work together in the login screen (`app/login.tsx:14-58`):
+
+```tsx app/login.tsx
+import CustomButton from '../components/CustomButton';
+import CustomInput from '../components/CustomInput';
+import Logo from '../components/Logo';
+import ScreenLayout from '../components/ScreenLayout';
+
+const Login = () => {
+    const router = useRouter();
+
+    return (
+        <ScreenLayout>
+            {/* Logo Component */}
+            <Logo className="mt-10 mb-12" />
+
+            {/* Form with CustomInput components */}
+            <View className="space-y-4">
+                <CustomInput
+                    placeholder="Correo electrónico"
+                    keyboardType="email-address"
+                    icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+                />
+
+                <CustomInput
+                    placeholder="Contraseña"
+                    secureTextEntry
+                    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+                />
+            </View>
+
+            {/* CustomButton Component */}
+            <View className="mt-10">
+                <CustomButton 
+                    title="Iniciar sesión" 
+                    onPress={() => router.replace('/dashboard')} 
+                />
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+## Component Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Type Safety" icon="shield-check">
+    Always define TypeScript interfaces for props:
+    ```tsx
+    interface CustomButtonProps extends TouchableOpacityProps {
+        title: string;
+    }
+    ```
+  </Card>
+
+  <Card title="Prop Spreading" icon="ellipsis">
+    Use spread operator for flexibility:
+    ```tsx
+    <TouchableOpacity {...props}>
+    ```
+  </Card>
+
+  <Card title="Default Props" icon="gear">
+    Provide sensible defaults:
+    ```tsx
+    scrollable = true
+    paddingHorizontal = 6
+    ```
+  </Card>
+
+  <Card title="Conditional Rendering" icon="code-branch">
+    Handle optional features gracefully:
+    ```tsx
+    {icon && <View>{icon}</View>}
+    ```
+  </Card>
+</CardGroup>
+
+## Icon Libraries
+
+DriveLoop Mobile uses two icon libraries:
+
+<CardGroup cols={2}>
+  <Card title="Expo Vector Icons" icon="at">
+    For Material Design icons
+    ```tsx
+    import { MaterialIcons } from '@expo/vector-icons';
+    
+    <MaterialIcons name="mail-outline" size={20} />
+    ```
+    Used in: CustomInput icons, back buttons
+  </Card>
+
+  <Card title="Lucide React Native" icon="sparkles">
+    For modern outlined icons
+    ```tsx
+    import { User, FileText } from 'lucide-react-native';
+    
+    <User size={64} color="#C91843" />
+    ```
+    Used in: MenuCard components
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Routing" icon="route" href="/concepts/routing">
+    Learn about file-based routing with Expo Router
+  </Card>
+  
+  <Card title="Styling" icon="paintbrush" href="/concepts/styling">
+    Explore NativeWind and Tailwind CSS styling
+  </Card>
+</CardGroup>

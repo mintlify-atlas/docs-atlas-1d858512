@@ -1,0 +1,182 @@
+---
+title: "File-Based Routing"
+description: "Understanding Expo Router's file-based routing system in DriveLoop Mobile"
+icon: "route"
+---
+
+DriveLoop Mobile uses **Expo Router** for navigation, which provides a file-based routing system similar to Next.js. Routes are automatically created based on the file structure in the `app/` directory.
+
+## How It Works
+
+Expo Router maps files in your `app/` directory directly to routes in your application. Each file becomes a route, and the file structure defines your navigation hierarchy.
+
+### Current Route Structure
+
+```
+app/
+├── _layout.tsx       # Root layout with font loading
+├── index.tsx         # Entry point (redirects to /login)
+├── login.tsx         # Login screen at /login
+├── register.tsx      # Registration screen at /register
+└── dashboard.tsx     # Dashboard screen at /dashboard
+```
+
+## Root Layout
+
+The root layout (`app/_layout.tsx:1-27`) handles global configuration like font loading and splash screen management:
+
+```tsx app/_layout.tsx
+import { useFonts } from 'expo-font';
+import { Slot, SplashScreen } from 'expo-router';
+import React, { useEffect } from 'react';
+import "./global.css";
+
+SplashScreen.preventAutoHideAsync();
+
+const RootLayout = () => {
+    const [fontsLoaded, error] = useFonts({
+        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
+    });
+
+    useEffect(() => {
+        if (error) throw error;
+        if (fontsLoaded) SplashScreen.hideAsync();
+    });
+
+    if (!fontsLoaded && !error) return null;
+
+    return <Slot />
+}
+
+export default RootLayout
+```
+
+<Note>
+The `<Slot />` component renders the current route's content. Think of it like an outlet where child routes are displayed.
+</Note>
+
+## Navigation Patterns
+
+<Tabs>
+  <Tab title="Redirects">
+    Use the `Redirect` component for immediate navigation, such as in your entry point:
+
+    ```tsx app/index.tsx
+    import { Redirect } from 'expo-router';
+
+    export default function Index() {
+        return <Redirect href="/login" />;
+    }
+    ```
+
+    This redirects users from `/` to `/login` immediately upon app launch.
+  </Tab>
+
+  <Tab title="Programmatic Navigation">
+    Use the `useRouter` hook for navigation triggered by user actions:
+
+    ```tsx app/login.tsx
+    import { useRouter } from 'expo-router';
+
+    const Login = () => {
+        const router = useRouter();
+
+        return (
+            <CustomButton 
+                title="Iniciar sesión" 
+                onPress={() => router.replace('/dashboard')} 
+            />
+        );
+    };
+    ```
+
+    <Info>
+    `router.replace()` replaces the current route, preventing back navigation. Use `router.push()` to maintain navigation history.
+    </Info>
+  </Tab>
+
+  <Tab title="Link Component">
+    Use the `Link` component for declarative navigation:
+
+    ```tsx app/login.tsx
+    import { Link } from 'expo-router';
+
+    <Link href="/register" asChild>
+        <TouchableOpacity>
+            <Text className="text-primary font-roboto-bold">
+                Regístrate
+            </Text>
+        </TouchableOpacity>
+    </Link>
+    ```
+
+    The `asChild` prop passes the href to the child component instead of wrapping it.
+  </Tab>
+</Tabs>
+
+## Router Methods
+
+<CardGroup cols={2}>
+  <Card title="router.push()" icon="arrow-right">
+    Navigate to a new route while maintaining history
+    ```tsx
+    router.push('/dashboard')
+    ```
+  </Card>
+
+  <Card title="router.replace()" icon="arrows-rotate">
+    Replace current route (no back navigation)
+    ```tsx
+    router.replace('/dashboard')
+    ```
+  </Card>
+
+  <Card title="router.back()" icon="arrow-left">
+    Navigate to the previous screen
+    ```tsx
+    router.back()
+    ```
+  </Card>
+
+  <Card title="router.canGoBack()" icon="circle-question">
+    Check if navigation history exists
+    ```tsx
+    if (router.canGoBack()) router.back()
+    ```
+  </Card>
+</CardGroup>
+
+## Example: Back Navigation
+
+The register screen (`app/register.tsx:18-20`) demonstrates back navigation:
+
+```tsx app/register.tsx
+<View className="flex-row items-center mt-4">
+    <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2">
+        <MaterialIcons name="arrow-back" size={24} color="#111111" />
+    </TouchableOpacity>
+    <View className="flex-1 items-center mr-8">
+        <Text className="text-xl font-roboto-bold text-secondary">Registro</Text>
+    </View>
+</View>
+```
+
+## Type Safety
+
+<Info>
+Notice the `as any` type assertions in the codebase (e.g., `href="/dashboard" as any`). This is a temporary workaround. For production apps, consider using typed routes with Expo Router's type generation.
+</Info>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Styling" icon="paintbrush" href="/concepts/styling">
+    Learn about NativeWind and Tailwind CSS styling
+  </Card>
+  
+  <Card title="Components" icon="cube" href="/concepts/components">
+    Explore the component architecture
+  </Card>
+</CardGroup>

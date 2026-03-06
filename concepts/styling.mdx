@@ -1,0 +1,324 @@
+---
+title: "Styling with NativeWind"
+description: "How DriveLoop Mobile uses NativeWind and Tailwind CSS for styling"
+icon: "paintbrush"
+---
+
+DriveLoop Mobile uses **NativeWind**, which brings Tailwind CSS utility classes to React Native. This allows you to style components using familiar Tailwind syntax with the `className` prop.
+
+## Tailwind Configuration
+
+The project's Tailwind configuration (`tailwind.config.js:1-28`) defines custom colors, fonts, and content paths:
+
+```js tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}"
+  ],
+  presets: [require("nativewind/preset")],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#C91843",
+          dark: "#9B1B39",
+          deep: "#870027",
+        },
+        secondary: "#282828",
+        accent: "#111111",
+      },
+      fontFamily: {
+        'roboto-bold': ['Roboto-Bold', 'sans-serif'],
+        'roboto-light': ['Roboto-Light', 'sans-serif'],
+        'roboto-medium': ['Roboto-Medium', 'sans-serif'],
+      }
+    },
+  },
+  plugins: [],
+}
+```
+
+<Note>
+The `content` array tells Tailwind which files to scan for class names. Make sure to include all paths where you use Tailwind classes.
+</Note>
+
+## Custom Theme
+
+### Brand Colors
+
+DriveLoop Mobile defines a custom color palette:
+
+<CardGroup cols={3}>
+  <Card title="Primary" icon="palette">
+    **Default:** `#C91843` (crimson red)
+    
+    **Dark:** `#9B1B39`
+    
+    **Deep:** `#870027`
+  </Card>
+
+  <Card title="Secondary" icon="circle">
+    **#282828** (dark gray)
+    
+    Used for text and UI elements
+  </Card>
+
+  <Card title="Accent" icon="circle">
+    **#111111** (near black)
+    
+    Used for emphasis
+  </Card>
+</CardGroup>
+
+### Custom Fonts
+
+Three Roboto font weights are configured and loaded in `app/_layout.tsx:10-14`:
+
+- `font-roboto-bold` - Roboto Bold
+- `font-roboto-medium` - Roboto Medium  
+- `font-roboto-light` - Roboto Light
+
+## Styling Patterns
+
+<Tabs>
+  <Tab title="Buttons">
+    The `CustomButton` component (`components/CustomButton.tsx:10-15`) demonstrates common button styling:
+
+    ```tsx components/CustomButton.tsx
+    <TouchableOpacity
+        className="bg-primary rounded-full py-4 items-center shadow-md active:opacity-80"
+        {...props}
+    >
+        <Text className="text-white text-lg font-roboto-bold">
+            {title}
+        </Text>
+    </TouchableOpacity>
+    ```
+
+    **Key utilities:**
+    - `bg-primary` - Custom brand color background
+    - `rounded-full` - Fully rounded corners (pill shape)
+    - `py-4` - Vertical padding
+    - `shadow-md` - Medium shadow
+    - `active:opacity-80` - Reduced opacity when pressed
+  </Tab>
+
+  <Tab title="Inputs">
+    The `CustomInput` component (`components/CustomInput.tsx:10-17`) shows input styling:
+
+    ```tsx components/CustomInput.tsx
+    <View className="flex-row items-center border-b border-gray-300 py-2 mb-4">
+        {icon && <View className="mr-3">{icon}</View>}
+        <TextInput
+            className="flex-1 text-base font-roboto-light text-secondary"
+            placeholderTextColor="#9CA3AF"
+            {...props}
+        />
+    </View>
+    ```
+
+    **Pattern highlights:**
+    - `flex-row` with `items-center` - Horizontal icon + input layout
+    - `border-b` - Bottom border only (underline style)
+    - `flex-1` on TextInput - Takes remaining space
+  </Tab>
+
+  <Tab title="Cards">
+    The `MenuCard` component (`components/MenuCard.tsx:13-23`) demonstrates card styling:
+
+    ```tsx components/MenuCard.tsx
+    <TouchableOpacity
+        onPress={onPress}
+        className="flex-1 border border-primary/20 bg-white rounded-2xl p-6 items-center shadow-sm active:bg-gray-50 m-2"
+    >
+        <View className="mb-4">
+            <Icon size={64} color="#C91843" strokeWidth={1.5} />
+        </View>
+        <Text className="text-secondary font-roboto-bold text-center text-lg">
+            {title}
+        </Text>
+    </TouchableOpacity>
+    ```
+
+    **Notable features:**
+    - `border-primary/20` - Primary color border with 20% opacity
+    - `rounded-2xl` - Extra large border radius
+    - `active:bg-gray-50` - Background changes on press
+  </Tab>
+
+  <Tab title="Layout">
+    The `ScreenLayout` component (`components/ScreenLayout.tsx:14-22`) provides consistent screen structure:
+
+    ```tsx components/ScreenLayout.tsx
+    <SafeAreaView className="flex-1 bg-white">
+        <Container
+            contentContainerStyle={scrollable ? { flexGrow: 1 } : undefined}
+            className={`flex-1 px-${paddingHorizontal}`}
+        >
+            {children}
+        </Container>
+    </SafeAreaView>
+    ```
+
+    **Layout utilities:**
+    - `flex-1` - Takes full available space
+    - `bg-white` - White background
+    - `px-${paddingHorizontal}` - Dynamic horizontal padding
+  </Tab>
+</Tabs>
+
+## Common Utility Patterns
+
+<Accordion title="Flexbox Layouts">
+  ```tsx
+  // Horizontal row layout
+  <View className="flex-row items-center justify-between">
+  
+  // Vertical column (default)
+  <View className="flex-col space-y-4">
+  
+  // Centered content
+  <View className="items-center justify-center">
+  
+  // Full width with flex-1
+  <View className="flex-1">
+  ```
+</Accordion>
+
+<Accordion title="Spacing">
+  ```tsx
+  // Margin
+  className="mt-10 mb-12"  // margin-top, margin-bottom
+  className="mx-4"         // horizontal margin
+  className="m-2"          // all sides
+  
+  // Padding
+  className="py-4 px-6"    // vertical & horizontal
+  
+  // Space between children
+  className="space-y-4"    // vertical spacing
+  ```
+</Accordion>
+
+<Accordion title="Typography">
+  ```tsx
+  // Font families (custom)
+  className="font-roboto-bold"
+  className="font-roboto-medium"
+  className="font-roboto-light"
+  
+  // Sizes
+  className="text-sm"      // Small text
+  className="text-base"    // Default size
+  className="text-lg"      // Large text
+  className="text-xl"      // Extra large
+  
+  // Colors
+  className="text-primary"     // Brand red
+  className="text-secondary"   // Dark gray
+  className="text-gray-500"    // Medium gray
+  className="text-white"       // White
+  ```
+</Accordion>
+
+<Accordion title="Colors & Opacity">
+  ```tsx
+  // Background colors
+  className="bg-primary"       // Solid color
+  className="bg-primary/20"    // 20% opacity
+  className="bg-white"
+  className="bg-gray-50"
+  
+  // Text colors
+  className="text-primary"
+  className="text-secondary"
+  ```
+</Accordion>
+
+<Accordion title="Borders & Radius">
+  ```tsx
+  // Borders
+  className="border border-gray-300"      // All sides
+  className="border-b border-gray-300"    // Bottom only
+  className="border-primary/20"           // With opacity
+  
+  // Border radius
+  className="rounded-full"    // Pill shape (buttons)
+  className="rounded-2xl"     // Extra large (cards)
+  ```
+</Accordion>
+
+<Accordion title="Shadows & Effects">
+  ```tsx
+  // Shadows (iOS/Android)
+  className="shadow-sm"    // Small shadow
+  className="shadow-md"    // Medium shadow
+  
+  // Interactive states
+  className="active:opacity-80"     // Press feedback
+  className="active:bg-gray-50"     // Background on press
+  ```
+</Accordion>
+
+## Real-World Example
+
+Here's how the login screen (`app/login.tsx:19-42`) combines multiple styling patterns:
+
+```tsx app/login.tsx
+<View className="space-y-4">
+    <CustomInput
+        placeholder="Correo electrónico"
+        keyboardType="email-address"
+        icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+    />
+
+    <CustomInput
+        placeholder="Contraseña"
+        secureTextEntry
+        icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+    />
+
+    <View className="flex-row justify-between mt-2">
+        <Text className="text-gray-500 text-sm font-roboto-light">
+            ¿Olvidaste la contraseña?
+        </Text>
+        <TouchableOpacity>
+            <Text className="text-primary font-roboto-bold text-sm">
+                Clic aquí
+            </Text>
+        </TouchableOpacity>
+    </View>
+</View>
+```
+
+<Note>
+Notice the consistent use of custom brand colors (`text-primary`), custom fonts (`font-roboto-bold`), and Tailwind utilities for layout (`flex-row justify-between`).
+</Note>
+
+## Setup Requirements
+
+To use NativeWind in your project, you need:
+
+1. **NativeWind & Tailwind CSS** (already installed)
+2. **Global CSS import** in your root layout:
+   ```tsx
+   import "./global.css";
+   ```
+3. **NativeWind preset** in `tailwind.config.js`:
+   ```js
+   presets: [require("nativewind/preset")]
+   ```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Routing" icon="route" href="/concepts/routing">
+    Learn about file-based routing with Expo Router
+  </Card>
+  
+  <Card title="Components" icon="cube" href="/concepts/components">
+    Explore reusable component patterns
+  </Card>
+</CardGroup>

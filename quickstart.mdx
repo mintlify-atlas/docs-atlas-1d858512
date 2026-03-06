@@ -1,80 +1,551 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start
+description: Get DriveLoop Mobile up and running in minutes
 ---
 
-## Get started in three steps
+## Overview
 
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+This guide will help you run DriveLoop Mobile on your development machine in just a few minutes. By the end, you'll have the app running on your chosen platform.
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Make sure you've completed the [Installation](/installation) steps before proceeding.
 </Note>
+
+## Start the Development Server
+
+<Steps>
+  <Step title="Navigate to Project Directory">
+    Open your terminal and navigate to the project root:
+
+    ```bash
+    cd driveloopMovil_test
+    ```
+  </Step>
+
+  <Step title="Start Expo Development Server">
+    Start the Expo development server:
+
+    <CodeGroup>
+      ```bash npm
+      npm start
+      ```
+
+      ```bash yarn
+      yarn start
+      ```
+
+      ```bash pnpm
+      pnpm start
+      ```
+
+      ```bash npx
+      npx expo start
+      ```
+    </CodeGroup>
+
+    <Info>
+      The development server will start on `http://localhost:8081` and display a QR code in your terminal.
+    </Info>
+  </Step>
+
+  <Step title="Choose Your Platform">
+    You'll see options to open the app:
+
+    - Press **`i`** for iOS Simulator (macOS only)
+    - Press **`a`** for Android Emulator
+    - Press **`w`** for Web browser
+    - Scan the QR code with Expo Go app (iOS/Android)
+  </Step>
+</Steps>
+
+## Platform-Specific Launch
+
+You can also launch directly on a specific platform:
+
+<Tabs>
+  <Tab title="iOS">
+    Launch on iOS Simulator (macOS only):
+
+    <CodeGroup>
+      ```bash npm
+      npm run ios
+      ```
+
+      ```bash yarn
+      yarn ios
+      ```
+
+      ```bash pnpm
+      pnpm ios
+      ```
+
+      ```bash npx
+      npx expo start --ios
+      ```
+    </CodeGroup>
+
+    <Tip>
+      Make sure you have Xcode and iOS Simulator installed before running this command.
+    </Tip>
+  </Tab>
+
+  <Tab title="Android">
+    Launch on Android Emulator:
+
+    <CodeGroup>
+      ```bash npm
+      npm run android
+      ```
+
+      ```bash yarn
+      yarn android
+      ```
+
+      ```bash pnpm
+      pnpm android
+      ```
+
+      ```bash npx
+      npx expo start --android
+      ```
+    </CodeGroup>
+
+    <Tip>
+      Make sure you have Android Studio and an Android Virtual Device (AVD) running before executing this command.
+    </Tip>
+  </Tab>
+
+  <Tab title="Web">
+    Launch in web browser:
+
+    <CodeGroup>
+      ```bash npm
+      npm run web
+      ```
+
+      ```bash yarn
+      yarn web
+      ```
+
+      ```bash pnpm
+      pnpm web
+      ```
+
+      ```bash npx
+      npx expo start --web
+      ```
+    </CodeGroup>
+
+    <Info>
+      The web version uses Metro bundler and runs at `http://localhost:8081`.
+    </Info>
+  </Tab>
+
+  <Tab title="Expo Go">
+    Using Expo Go app on your physical device:
+
+    <Steps>
+      <Step title="Install Expo Go">
+        Download Expo Go from [App Store](https://apps.apple.com/app/expo-go/id982107779) (iOS) or [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent) (Android).
+      </Step>
+
+      <Step title="Connect to Same Network">
+        Ensure your computer and mobile device are on the same Wi-Fi network.
+      </Step>
+
+      <Step title="Scan QR Code">
+        - **iOS**: Open Camera app and scan the QR code
+        - **Android**: Open Expo Go app and scan the QR code
+      </Step>
+    </Steps>
+
+    <Warning>
+      Expo Go has limitations with custom native modules. Some features may not work in Expo Go.
+    </Warning>
+  </Tab>
+</Tabs>
+
+## Understanding the App Structure
+
+Once the app launches, you'll see the login screen. Let's understand how the app is organized:
+
+### File-Based Routing
+
+DriveLoop Mobile uses **Expo Router** with file-based routing:
+
+```
+app/
+├── _layout.tsx       # Root layout with font loading
+├── index.tsx         # Redirects to /login
+├── login.tsx         # Login screen
+├── register.tsx      # Registration screen
+└── dashboard.tsx     # Main dashboard
+```
+
+### Root Layout
+
+The `app/_layout.tsx` handles global setup:
+
+```tsx app/_layout.tsx
+import { useFonts } from 'expo-font';
+import { Slot, SplashScreen } from 'expo-router';
+import React, { useEffect } from 'react';
+import "./global.css";
+
+SplashScreen.preventAutoHideAsync();
+
+const RootLayout = () => {
+    const [fontsLoaded, error] = useFonts({
+        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
+    });
+
+    useEffect(() => {
+        if (error) throw error;
+        if (fontsLoaded) SplashScreen.hideAsync();
+    });
+
+    if (!fontsLoaded && !error) return null;
+
+    return <Slot />
+}
+
+export default RootLayout
+```
+
+<Info>
+  The root layout loads custom Roboto fonts and manages the splash screen. It imports `global.css` which enables Tailwind utilities via NativeWind.
+</Info>
+
+### Entry Point
+
+The `app/index.tsx` redirects to the login screen:
+
+```tsx app/index.tsx
+import { Redirect } from 'expo-router';
+
+export default function Index() {
+    return <Redirect href="/login" />;
+}
+```
+
+### Components
+
+Reusable components are located in the `components/` directory:
+
+```
+components/
+├── CustomButton.tsx   # Styled button component
+├── CustomInput.tsx    # Styled input field
+├── Logo.tsx           # App logo component
+├── MenuCard.tsx       # Dashboard menu card
+└── ScreenLayout.tsx   # Consistent screen wrapper
+```
+
+## Styling with NativeWind
+
+DriveLoop Mobile uses **NativeWind v4** for styling, which brings Tailwind CSS to React Native:
+
+### Custom Theme
+
+The app uses a custom color palette defined in `tailwind.config.js`:
+
+```javascript tailwind.config.js
+theme: {
+  extend: {
+    colors: {
+      primary: {
+        DEFAULT: "#C91843",  // Primary red
+        dark: "#9B1B39",     // Darker shade
+        deep: "#870027",     // Deepest shade
+      },
+      secondary: "#282828",  // Dark gray
+      accent: "#111111",     // Almost black
+    },
+    fontFamily: {
+      'roboto-bold': ['Roboto-Bold', 'sans-serif'],
+      'roboto-light': ['Roboto-Light', 'sans-serif'],
+      'roboto-medium': ['Roboto-Medium', 'sans-serif'],
+    }
+  }
+}
+```
+
+### Using Tailwind Classes
+
+You can use Tailwind utility classes in your components:
+
+```tsx
+import { View, Text } from 'react-native';
+
+export default function Example() {
+  return (
+    <View className="flex-1 bg-primary p-4">
+      <Text className="text-white font-roboto-bold text-2xl">
+        Welcome to DriveLoop!
+      </Text>
+    </View>
+  );
+}
+```
+
+## Development Workflow
+
+### Hot Reloading
+
+Expo provides automatic hot reloading. When you save a file, the app will automatically refresh:
+
+<Steps>
+  <Step title="Edit a File">
+    Open any file in the `app/` or `components/` directory and make changes.
+  </Step>
+
+  <Step title="Save the File">
+    Save the file (Ctrl+S or Cmd+S).
+  </Step>
+
+  <Step title="See Changes">
+    The app will automatically reload with your changes.
+  </Step>
+</Steps>
+
+<Tip>
+  If hot reloading doesn't work, press **`r`** in the terminal to manually reload, or shake your device and select "Reload".
+</Tip>
+
+### Development Menu
+
+Access the developer menu:
+
+- **iOS Simulator**: Press `Cmd + D`
+- **Android Emulator**: Press `Cmd + M` (macOS) or `Ctrl + M` (Windows/Linux)
+- **Physical Device**: Shake the device
+
+Options include:
+- Reload
+- Debug Remote JS
+- Show Performance Monitor
+- Show Element Inspector
+- Enable Fast Refresh
+
+## Available Scripts
+
+DriveLoop Mobile includes these npm scripts:
+
+```json package.json
+{
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "reset-project": "node ./scripts/reset-project.js"
+  }
+}
+```
+
+### Linting
+
+Run ESLint to check code quality:
+
+<CodeGroup>
+  ```bash npm
+  npm run lint
+  ```
+
+  ```bash yarn
+  yarn lint
+  ```
+
+  ```bash pnpm
+  pnpm lint
+  ```
+</CodeGroup>
+
+## Common Commands
+
+Here are some useful commands for development:
+
+### Clear Cache
+
+If you encounter issues, clear the cache:
+
+```bash
+npx expo start --clear
+```
+
+### Tunnel Connection
+
+If you're having network issues, use tunnel mode:
+
+```bash
+npx expo start --tunnel
+```
+
+<Warning>
+  Tunnel mode is slower but works when devices aren't on the same network.
+</Warning>
+
+### View Logs
+
+View detailed logs:
+
+```bash
+npx expo start --verbose
+```
+
+### Production Build
+
+To create a production build:
+
+```bash
+# iOS
+eas build --platform ios
+
+# Android
+eas build --platform android
+```
+
+<Note>
+  Production builds require [EAS (Expo Application Services)](https://docs.expo.dev/eas/) setup.
+</Note>
+
+## Debugging
+
+### React DevTools
+
+Install React DevTools:
+
+```bash
+npm install -g react-devtools
+```
+
+Start React DevTools:
+
+```bash
+react-devtools
+```
+
+Then press **`Cmd + D`** (iOS) or **`Cmd + M`** (Android) and select "Open React DevTools".
+
+### Console Logs
+
+View console logs in your terminal where you ran `expo start`. Alternatively:
+
+```bash
+# iOS
+npx react-native log-ios
+
+# Android
+npx react-native log-android
+```
+
+### Network Debugging
+
+Enable network inspection in the dev menu:
+
+1. Open dev menu (shake device or `Cmd/Ctrl + D/M`)
+2. Select "Debug Remote JS"
+3. Open Chrome DevTools (http://localhost:8081/debugger-ui)
+4. Go to Network tab
+
+## Troubleshooting
+
+### App Won't Load
+
+<AccordionGroup>
+  <Accordion title="Metro bundler not starting">
+    ```bash
+    # Kill any process on port 8081
+    lsof -ti:8081 | xargs kill -9
+    
+    # Start again
+    npx expo start --clear
+    ```
+  </Accordion>
+
+  <Accordion title="Fonts not loading">
+    The app uses custom Roboto fonts. If they don't load:
+    
+    ```bash
+    # Clear cache and restart
+    npx expo start --clear
+    ```
+    
+    Ensure font files exist in `assets/fonts/`:
+    - `Roboto-Bold.ttf`
+    - `Roboto-Light.ttf`
+    - `Roboto-Medium.ttf`
+  </Accordion>
+
+  <Accordion title="White screen on launch">
+    Check that:
+    1. All dependencies are installed
+    2. Metro bundler is running
+    3. No JavaScript errors in console
+    4. Fonts are loaded before rendering
+  </Accordion>
+
+  <Accordion title="Cannot connect to Metro">
+    Ensure:
+    1. Your device and computer are on the same Wi-Fi
+    2. Firewall isn't blocking connections
+    3. Try tunnel mode: `npx expo start --tunnel`
+  </Accordion>
+</AccordionGroup>
+
+### Build Errors
+
+<AccordionGroup>
+  <Accordion title="TypeScript errors">
+    ```bash
+    # Check TypeScript version
+    npm list typescript
+    
+    # Reinstall correct version
+    npm install typescript@~5.9.2 --save-dev
+    ```
+  </Accordion>
+
+  <Accordion title="Module resolution errors">
+    ```bash
+    # Clear all caches
+    rm -rf node_modules
+    rm -rf .expo
+    npm install
+    npx expo start --clear
+    ```
+  </Accordion>
+
+  <Accordion title="NativeWind styles not applying">
+    Ensure:
+    1. `global.css` is imported in `_layout.tsx`
+    2. `nativewind-env.d.ts` exists
+    3. Babel config includes NativeWind preset
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+Now that you have DriveLoop Mobile running, explore these topics:
+
+<CardGroup cols={2}>
+  <Card title="Components" icon="cube" href="/concepts/components">
+    Learn about reusable UI components
+  </Card>
+  <Card title="Routing" icon="route" href="/concepts/routing">
+    Understand Expo Router and navigation
+  </Card>
+  <Card title="Styling" icon="paintbrush" href="/concepts/styling">
+    Master NativeWind and Tailwind CSS
+  </Card>
+  <Card title="Authentication" icon="lock" href="/guides/authentication">
+    Implement user authentication flows
+  </Card>
+</CardGroup>
+
+<Tip>
+  Join the [Expo Discord](https://chat.expo.dev) community for help and discussions!
+</Tip>

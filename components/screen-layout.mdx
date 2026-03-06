@@ -1,0 +1,334 @@
+---
+title: ScreenLayout
+description: A flexible screen container component with safe area handling and optional scrolling
+---
+
+## Overview
+
+The `ScreenLayout` component is a wrapper for screen content that handles safe areas (notches, status bars), provides optional scrolling, and maintains consistent padding across the app.
+
+## Import
+
+```typescript
+import ScreenLayout from '../components/ScreenLayout';
+```
+
+## Props
+
+<ParamField path="children" type="React.ReactNode" required>
+  The content to render inside the screen layout
+</ParamField>
+
+<ParamField path="scrollable" type="boolean" default="true">
+  If true, wraps content in a ScrollView. If false, uses a static View
+</ParamField>
+
+<ParamField path="paddingHorizontal" type="number" default="6">
+  Horizontal padding units (uses Tailwind's spacing scale)
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+interface ScreenLayoutProps {
+    children: React.ReactNode;
+    scrollable?: boolean;
+    paddingHorizontal?: number;
+}
+```
+
+## Features
+
+- **Safe Area Management**: Uses `SafeAreaView` to respect device notches and system UI
+- **Flexible Scrolling**: Choose between scrollable and fixed layouts
+- **Consistent Padding**: Configurable horizontal padding
+- **White Background**: Clean white background by default
+- **Full Height**: Takes full screen height with `flex-1`
+
+## Usage Examples
+
+<Tabs>
+  <Tab title="Default (Scrollable)">
+    ```typescript
+    import ScreenLayout from '../components/ScreenLayout';
+    import { Text } from 'react-native';
+
+    const MyScreen = () => {
+        return (
+            <ScreenLayout>
+                <Text>This content is scrollable by default</Text>
+                {/* More content... */}
+            </ScreenLayout>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Non-Scrollable">
+    ```typescript
+    import ScreenLayout from '../components/ScreenLayout';
+    import { View, Text } from 'react-native';
+
+    const FixedScreen = () => {
+        return (
+            <ScreenLayout scrollable={false}>
+                <View className="flex-1 justify-center items-center">
+                    <Text>Centered content without scrolling</Text>
+                </View>
+            </ScreenLayout>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Custom Padding">
+    ```typescript
+    import ScreenLayout from '../components/ScreenLayout';
+    import { Text } from 'react-native';
+
+    const WideScreen = () => {
+        return (
+            <ScreenLayout paddingHorizontal={4}>
+                <Text>Less horizontal padding for wider content</Text>
+            </ScreenLayout>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="No Padding">
+    ```typescript
+    import ScreenLayout from '../components/ScreenLayout';
+    import { Image } from 'react-native';
+
+    const FullWidthScreen = () => {
+        return (
+            <ScreenLayout paddingHorizontal={0}>
+                <Image 
+                    source={{ uri: 'banner.jpg' }} 
+                    className="w-full h-48"
+                />
+            </ScreenLayout>
+        );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Real-World Examples
+
+### Login Screen
+
+From `~/workspace/source/app/login.tsx:13-58`:
+
+```typescript
+import ScreenLayout from '../components/ScreenLayout';
+import Logo from '../components/Logo';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
+import { View } from 'react-native';
+
+const Login = () => {
+    return (
+        <ScreenLayout>
+            {/* Logo */}
+            <Logo className="mt-10 mb-12" />
+
+            {/* Formulario */}
+            <View className="space-y-4">
+                <CustomInput
+                    placeholder="Correo electrónico"
+                    keyboardType="email-address"
+                />
+                <CustomInput
+                    placeholder="Contraseña"
+                    secureTextEntry
+                />
+            </View>
+
+            {/* Botón de Acción */}
+            <View className="mt-10">
+                <CustomButton title="Iniciar sesión" />
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+### Register Screen
+
+From `~/workspace/source/app/register.tsx:14-80`:
+
+```typescript
+import ScreenLayout from '../components/ScreenLayout';
+import Logo from '../components/Logo';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
+import { View, Text } from 'react-native';
+
+const Register = () => {
+    return (
+        <ScreenLayout>
+            {/* Header con botón Volver */}
+            <View className="flex-row items-center mt-4">
+                <TouchableOpacity onPress={() => router.back()}>
+                    <MaterialIcons name="arrow-back" size={24} />
+                </TouchableOpacity>
+                <View className="flex-1 items-center mr-8">
+                    <Text className="text-xl font-roboto-bold">Registro</Text>
+                </View>
+            </View>
+
+            <Logo className="mt-6 mb-8" />
+
+            {/* Multiple form fields */}
+            <View className="space-y-2">
+                <CustomInput placeholder="Nombre" />
+                <CustomInput placeholder="Apellido" />
+                <CustomInput placeholder="Correo electrónico" />
+                {/* More inputs... */}
+            </View>
+
+            <View className="mt-10 mb-8">
+                <CustomButton title="Registrarse" />
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+### Dashboard Screen
+
+From `~/workspace/source/app/dashboard.tsx:9-32`:
+
+```typescript
+import ScreenLayout from '../components/ScreenLayout';
+import Logo from '../components/Logo';
+import MenuCard from '../components/MenuCard';
+import { User, FileText } from 'lucide-react-native';
+import { View } from 'react-native';
+
+const Dashboard = () => {
+    return (
+        <ScreenLayout paddingHorizontal={4}>
+            <Logo className="mt-8 mb-12" />
+
+            {/* Opciones del menú */}
+            <View className="space-y-4">
+                <View className="flex-row">
+                    <MenuCard
+                        title="Configuración de cuenta"
+                        Icon={User}
+                    />
+                </View>
+
+                <View className="flex-row">
+                    <MenuCard
+                        title="Documentos"
+                        Icon={FileText}
+                    />
+                </View>
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+## Component Source
+
+Location: `~/workspace/source/components/ScreenLayout.tsx:11-24`
+
+```typescript
+const ScreenLayout = ({ children, scrollable = true, paddingHorizontal = 6 }: ScreenLayoutProps) => {
+    const Container = scrollable ? ScrollView : View;
+
+    return (
+        <SafeAreaView className="flex-1 bg-white">
+            <Container
+                contentContainerStyle={scrollable ? { flexGrow: 1 } : undefined}
+                className={`flex-1 px-${paddingHorizontal}`}
+            >
+                {children}
+            </Container>
+        </SafeAreaView>
+    );
+};
+```
+
+<Note>
+  The component dynamically chooses between `ScrollView` and `View` based on the `scrollable` prop, providing flexibility without code duplication.
+</Note>
+
+<Tip>
+  Use `scrollable={false}` for screens with fixed layouts like splash screens, error pages, or centered content that shouldn't scroll.
+</Tip>
+
+## When to Use Each Mode
+
+### Scrollable (Default)
+Use for:
+- Forms with multiple inputs
+- Content that may exceed screen height
+- Lists or feeds
+- Article/document viewing
+- Any dynamic content
+
+### Non-Scrollable
+Use for:
+- Splash screens
+- Empty states
+- Error pages
+- Fixed dashboards
+- Camera/AR views
+- Content that should always fit on screen
+
+## Padding Scale
+
+Tailwind spacing units (based on 4px):
+- `0` = 0px
+- `2` = 8px
+- `4` = 16px (common for cards/grids)
+- `6` = 24px (default, good for forms)
+- `8` = 32px (extra spacious)
+
+## Safe Area Behavior
+
+The component uses `react-native-safe-area-context` to handle:
+- iPhone notches (Dynamic Island)
+- Android status bars
+- Navigation bars
+- Home indicators
+- Rounded screen corners
+
+<Note>
+  Ensure `SafeAreaProvider` wraps your app root (typically in `_layout.tsx`) for safe areas to work properly.
+</Note>
+
+## Keyboard Handling
+
+For forms, consider wrapping with `KeyboardAvoidingView`:
+
+```typescript
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import ScreenLayout from '../components/ScreenLayout';
+
+const FormScreen = () => {
+    return (
+        <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            className="flex-1"
+        >
+            <ScreenLayout>
+                {/* Form content */}
+            </ScreenLayout>
+        </KeyboardAvoidingView>
+    );
+};
+```
+
+## See Also
+
+- [CustomButton](/components/custom-button) - Button component
+- [CustomInput](/components/custom-input) - Input component
+- [Logo](/components/logo) - Logo component
+- [React Native Safe Area Context](https://github.com/th3rdwave/react-native-safe-area-context)

@@ -1,0 +1,329 @@
+---
+title: 'Authentication'
+description: 'Learn how to implement authentication flows in DriveLoop Mobile'
+icon: 'lock'
+---
+
+## Overview
+
+DriveLoop Mobile uses Expo Router for navigation and implements a straightforward authentication flow with login and registration screens. The authentication UI is built with custom components and NativeWind for styling.
+
+## Authentication Flow
+
+<Steps>
+  <Step title="User lands on Login screen">
+    The login screen (`app/login.tsx`) is the entry point for authentication.
+  </Step>
+  
+  <Step title="User enters credentials">
+    Email and password are collected using the `CustomInput` component with appropriate icons and keyboard types.
+  </Step>
+  
+  <Step title="Navigation to Dashboard">
+    Upon successful authentication, the user is redirected to the dashboard using `router.replace('/dashboard')`.
+  </Step>
+</Steps>
+
+## Login Implementation
+
+The login screen demonstrates the core authentication pattern used throughout the app.
+
+### Basic Login Screen
+
+```tsx app/login.tsx
+import { MaterialIcons } from '@expo/vector-icons';
+import { Link, useRouter } from 'expo-router';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import CustomButton from '../components/CustomButton';
+import CustomInput from '../components/CustomInput';
+import Logo from '../components/Logo';
+import ScreenLayout from '../components/ScreenLayout';
+
+const Login = () => {
+    const router = useRouter();
+
+    return (
+        <ScreenLayout>
+            <Logo className="mt-10 mb-12" />
+
+            <View className="space-y-4">
+                <CustomInput
+                    placeholder="Correo electrónico"
+                    keyboardType="email-address"
+                    icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+                />
+
+                <CustomInput
+                    placeholder="Contraseña"
+                    secureTextEntry
+                    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+                />
+            </View>
+
+            <View className="mt-10">
+                <CustomButton 
+                    title="Iniciar sesión" 
+                    onPress={() => router.replace('/dashboard' as any)} 
+                />
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+### Key Components
+
+<CardGroup cols={2}>
+  <Card title="CustomInput" icon="input-text" href="/components/custom-input">
+    Reusable input component with icon support and secure text entry
+  </Card>
+  
+  <Card title="CustomButton" icon="square-mouse-pointer" href="/components/custom-button">
+    Primary button component with consistent styling and press states
+  </Card>
+  
+  <Card title="ScreenLayout" icon="rectangle-vertical" href="/components/screen-layout">
+    Container component with SafeAreaView and ScrollView support
+  </Card>
+  
+  <Card title="Logo" icon="image" href="/components/logo">
+    App logo component used across authentication screens
+  </Card>
+</CardGroup>
+
+## Registration Flow
+
+The registration screen extends the login pattern with additional fields and validation.
+
+### Registration Screen
+
+```tsx app/register.tsx
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+
+const Register = () => {
+    const router = useRouter();
+    const [accepted, setAccepted] = useState(false);
+
+    return (
+        <ScreenLayout>
+            {/* Header with back button */}
+            <View className="flex-row items-center mt-4">
+                <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2">
+                    <MaterialIcons name="arrow-back" size={24} color="#111111" />
+                </TouchableOpacity>
+                <View className="flex-1 items-center mr-8">
+                    <Text className="text-xl font-roboto-bold text-secondary">Registro</Text>
+                </View>
+            </View>
+
+            <Logo className="mt-6 mb-8" />
+
+            <View className="space-y-2">
+                <CustomInput
+                    placeholder="Nombre"
+                    icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+                />
+                <CustomInput
+                    placeholder="Apellido"
+                    icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+                />
+                <CustomInput
+                    placeholder="Correo electrónico"
+                    keyboardType="email-address"
+                    icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+                />
+                <CustomInput
+                    placeholder="Contraseña"
+                    secureTextEntry
+                    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+                />
+                <CustomInput
+                    placeholder="Confirmar contraseña"
+                    secureTextEntry
+                    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+                />
+
+                {/* Terms and Conditions Checkbox */}
+                <TouchableOpacity
+                    className="flex-row items-center mt-4"
+                    onPress={() => setAccepted(!accepted)}
+                >
+                    <MaterialCommunityIcons
+                        name={accepted ? "checkbox-marked" : "checkbox-blank-outline"}
+                        size={24}
+                        color={accepted ? "#C91843" : "#6B7280"}
+                    />
+                    <Text className="ml-3 text-gray-500 text-sm font-roboto-light">
+                        Acepto los <Text className="text-blue-400">términos y condiciones</Text>
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
+            <View className="mt-10 mb-8">
+                <CustomButton title="Registrarse" onPress={() => console.log('Register press')} />
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+### Registration Features
+
+<Tabs>
+  <Tab title="Form Fields">
+    The registration form collects:
+    - **Nombre** (First name)
+    - **Apellido** (Last name)
+    - **Correo electrónico** (Email with `email-address` keyboard type)
+    - **Contraseña** (Password with secure text entry)
+    - **Confirmar contraseña** (Password confirmation)
+  </Tab>
+  
+  <Tab title="State Management">
+    ```tsx
+    const [accepted, setAccepted] = useState(false);
+    ```
+    
+    Uses React `useState` to track terms and conditions acceptance.
+  </Tab>
+  
+  <Tab title="Navigation">
+    ```tsx
+    const router = useRouter();
+    
+    // Go back to previous screen
+    router.back();
+    ```
+    
+    Implements back navigation with Expo Router.
+  </Tab>
+</Tabs>
+
+## Password Recovery
+
+The login screen includes a password recovery link:
+
+```tsx
+<View className="flex-row justify-between mt-2">
+    <Text className="text-gray-500 text-sm font-roboto-light">
+        ¿Olvidaste la contraseña?
+    </Text>
+    <TouchableOpacity>
+        <Text className="text-primary font-roboto-bold text-sm">
+            Clic aquí
+        </Text>
+    </TouchableOpacity>
+</View>
+```
+
+<Note>
+  The password recovery functionality can be extended to navigate to a dedicated password reset screen.
+</Note>
+
+## Navigation Between Auth Screens
+
+### From Login to Register
+
+```tsx
+import { Link } from 'expo-router';
+
+<View className="flex-row justify-center mt-8">
+    <Text className="text-gray-500 font-roboto-light">¿No tienes una cuenta? </Text>
+    <Link href={"register" as any} asChild>
+        <TouchableOpacity>
+            <Text className="text-primary font-roboto-bold">Regístrate</Text>
+        </TouchableOpacity>
+    </Link>
+</View>
+```
+
+### After Successful Login
+
+```tsx
+router.replace('/dashboard' as any)
+```
+
+<Warning>
+  Using `router.replace()` instead of `router.push()` prevents users from navigating back to the login screen after authentication.
+</Warning>
+
+## Icon Libraries
+
+DriveLoop Mobile uses two icon libraries for authentication screens:
+
+<Tabs>
+  <Tab title="Material Icons">
+    ```tsx
+    import { MaterialIcons } from '@expo/vector-icons';
+    
+    <MaterialIcons name="mail-outline" size={20} color="#6B7280" />
+    <MaterialIcons name="lock-outline" size={20} color="#6B7280" />
+    <MaterialIcons name="person-outline" size={20} color="#6B7280" />
+    <MaterialIcons name="arrow-back" size={24} color="#111111" />
+    ```
+    
+    Used for input field icons and navigation.
+  </Tab>
+  
+  <Tab title="Material Community Icons">
+    ```tsx
+    import { MaterialCommunityIcons } from '@expo/vector-icons';
+    
+    <MaterialCommunityIcons
+        name={accepted ? "checkbox-marked" : "checkbox-blank-outline"}
+        size={24}
+        color={accepted ? "#C91843" : "#6B7280"}
+    />
+    ```
+    
+    Used for checkbox states in the registration form.
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Secure Text Entry" icon="eye-slash">
+    Always use `secureTextEntry` prop on password fields to mask input.
+  </Card>
+  
+  <Card title="Keyboard Types" icon="keyboard">
+    Set `keyboardType="email-address"` for email inputs to show the appropriate keyboard.
+  </Card>
+  
+  <Card title="Router Replace" icon="arrow-right-arrow-left">
+    Use `router.replace()` for post-authentication navigation to prevent back navigation.
+  </Card>
+  
+  <Card title="Icon Colors" icon="palette">
+    Use `#6B7280` (gray-500) for inactive icons and `#C91843` (primary) for active states.
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<Steps>
+  <Step title="Add State Management">
+    Implement form state management with React Hook Form or Formik for validation.
+  </Step>
+  
+  <Step title="Connect to Backend">
+    Integrate with your authentication API to handle actual login and registration.
+  </Step>
+  
+  <Step title="Add Error Handling">
+    Display validation errors and API error messages to users.
+  </Step>
+  
+  <Step title="Implement Token Storage">
+    Use `expo-secure-store` to securely store authentication tokens.
+  </Step>
+</Steps>
+
+<Tip>
+  Consider adding loading states to buttons during API calls to improve user experience.
+</Tip>

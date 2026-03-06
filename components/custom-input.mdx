@@ -1,0 +1,260 @@
+---
+title: CustomInput
+description: A flexible text input component with optional icon support and consistent styling
+---
+
+## Overview
+
+The `CustomInput` component is a styled text input field that extends React Native's `TextInput`. It features a bottom border, optional left icon, and consistent spacing for form layouts.
+
+## Import
+
+```typescript
+import CustomInput from '../components/CustomInput';
+```
+
+## Props
+
+The component extends all `TextInputProps` from React Native, plus the following:
+
+<ParamField path="icon" type="React.ReactNode">
+  Optional icon element displayed on the left side of the input field. Typically used with icon libraries like MaterialIcons or Lucide.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text shown when the input is empty
+</ParamField>
+
+<ParamField path="secureTextEntry" type="boolean">
+  If true, the text input obscures the entered text for passwords
+</ParamField>
+
+<ParamField path="keyboardType" type="KeyboardTypeOptions">
+  Determines which keyboard to open (e.g., 'email-address', 'numeric', 'phone-pad')
+</ParamField>
+
+<ParamField path="value" type="string">
+  The text value of the input
+</ParamField>
+
+<ParamField path="onChangeText" type="(text: string) => void">
+  Callback function called when the text changes
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+interface CustomInputProps extends TextInputProps {
+    icon?: React.ReactNode;
+}
+```
+
+## Styling
+
+The input includes these default styles:
+- **Container**: Flex row layout with bottom border
+- **Border**: Gray bottom border (`border-gray-300`)
+- **Padding**: Vertical padding of 2 units, bottom margin of 4 units
+- **Text**: Base size, light Roboto font, secondary color
+- **Placeholder**: Gray color (`#9CA3AF`)
+- **Icon**: Right margin of 3 units when present
+
+## Usage Examples
+
+<Tabs>
+  <Tab title="Email Input">
+    ```typescript
+    import CustomInput from '../components/CustomInput';
+    import { MaterialIcons } from '@expo/vector-icons';
+
+    const EmailField = () => {
+        return (
+            <CustomInput
+                placeholder="Correo electrónico"
+                keyboardType="email-address"
+                icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+            />
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Password Input">
+    ```typescript
+    import CustomInput from '../components/CustomInput';
+    import { MaterialIcons } from '@expo/vector-icons';
+
+    const PasswordField = () => {
+        return (
+            <CustomInput
+                placeholder="Contraseña"
+                secureTextEntry
+                icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+            />
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Name Input">
+    ```typescript
+    import CustomInput from '../components/CustomInput';
+    import { MaterialIcons } from '@expo/vector-icons';
+
+    const NameField = () => {
+        return (
+            <CustomInput
+                placeholder="Nombre"
+                icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+            />
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Controlled Input">
+    ```typescript
+    import CustomInput from '../components/CustomInput';
+    import { useState } from 'react';
+
+    const ControlledField = () => {
+        const [email, setEmail] = useState('');
+
+        return (
+            <CustomInput
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+            />
+        );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Real-World Examples
+
+### Login Form
+
+From `~/workspace/source/app/login.tsx:20-30`:
+
+```typescript
+import { MaterialIcons } from '@expo/vector-icons';
+import CustomInput from '../components/CustomInput';
+
+const Login = () => {
+    return (
+        <View className="space-y-4">
+            <CustomInput
+                placeholder="Correo electrónico"
+                keyboardType="email-address"
+                icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+            />
+
+            <CustomInput
+                placeholder="Contraseña"
+                secureTextEntry
+                icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+            />
+        </View>
+    );
+};
+```
+
+### Registration Form
+
+From `~/workspace/source/app/register.tsx:31-57`:
+
+```typescript
+import { MaterialIcons } from '@expo/vector-icons';
+import CustomInput from '../components/CustomInput';
+
+const Register = () => {
+    return (
+        <View className="space-y-2">
+            <CustomInput
+                placeholder="Nombre"
+                icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+            />
+
+            <CustomInput
+                placeholder="Apellido"
+                icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+            />
+
+            <CustomInput
+                placeholder="Correo electrónico"
+                keyboardType="email-address"
+                icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+            />
+
+            <CustomInput
+                placeholder="Contraseña"
+                secureTextEntry
+                icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+            />
+
+            <CustomInput
+                placeholder="Confirmar contraseña"
+                secureTextEntry
+                icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+            />
+        </View>
+    );
+};
+```
+
+## Component Source
+
+Location: `~/workspace/source/components/CustomInput.tsx:8-19`
+
+```typescript
+const CustomInput = ({ icon, ...props }: CustomInputProps) => {
+    return (
+        <View className="flex-row items-center border-b border-gray-300 py-2 mb-4">
+            {icon && <View className="mr-3">{icon}</View>}
+            <TextInput
+                className="flex-1 text-base font-roboto-light text-secondary"
+                placeholderTextColor="#9CA3AF"
+                {...props}
+            />
+        </View>
+    );
+};
+```
+
+<Note>
+  The component conditionally renders the icon only when provided, making it flexible for both icon and non-icon use cases.
+</Note>
+
+<Tip>
+  Use `keyboardType="email-address"` for email inputs to show the appropriate keyboard with @ and . symbols.
+</Tip>
+
+## Keyboard Types
+
+Commonly used keyboard types:
+- `email-address` - Email keyboard with @ symbol
+- `numeric` - Numeric keypad
+- `phone-pad` - Phone number pad
+- `default` - Standard keyboard
+- `number-pad` - Numbers only
+- `decimal-pad` - Numbers with decimal point
+
+## Accessibility
+
+For better accessibility, add labels and hints:
+
+```typescript
+<CustomInput 
+    placeholder="Email"
+    accessibilityLabel="Email address"
+    accessibilityHint="Enter your email address"
+/>
+```
+
+## See Also
+
+- [CustomButton](/components/custom-button) - Button component
+- [ScreenLayout](/components/screen-layout) - Screen container component

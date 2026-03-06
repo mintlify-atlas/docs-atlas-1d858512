@@ -1,0 +1,154 @@
+---
+title: CustomButton
+description: A styled button component with primary branding for user interactions
+---
+
+## Overview
+
+The `CustomButton` component is a reusable, branded button built on top of React Native's `TouchableOpacity`. It features rounded corners, primary color styling, and smooth press interactions.
+
+## Import
+
+```typescript
+import CustomButton from '../components/CustomButton';
+```
+
+## Props
+
+The component extends all `TouchableOpacityProps` from React Native, plus the following:
+
+<ParamField path="title" type="string" required>
+  The text displayed inside the button
+</ParamField>
+
+<ParamField path="onPress" type="() => void">
+  Callback function triggered when the button is pressed
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  If true, the button is disabled and won't respond to user interactions
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional Tailwind CSS classes for custom styling
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+interface CustomButtonProps extends TouchableOpacityProps {
+    title: string;
+}
+```
+
+## Styling
+
+The button includes these default styles:
+- **Background**: Primary brand color (`bg-primary`)
+- **Shape**: Fully rounded corners (`rounded-full`)
+- **Padding**: Vertical padding of 4 units
+- **Text**: White color, large size, bold Roboto font
+- **Shadow**: Medium shadow for depth
+- **Active State**: 80% opacity when pressed
+
+## Usage Examples
+
+<Tabs>
+  <Tab title="Login Screen">
+    ```typescript
+    import CustomButton from '../components/CustomButton';
+    import { useRouter } from 'expo-router';
+
+    const Login = () => {
+        const router = useRouter();
+
+        return (
+            <View className="mt-10">
+                <CustomButton 
+                    title="Iniciar sesión" 
+                    onPress={() => router.replace('/dashboard')} 
+                />
+            </View>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Register Screen">
+    ```typescript
+    import CustomButton from '../components/CustomButton';
+
+    const Register = () => {
+        return (
+            <View className="mt-10 mb-8">
+                <CustomButton 
+                    title="Registrarse" 
+                    onPress={() => console.log('Register press')} 
+                />
+            </View>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="With Disabled State">
+    ```typescript
+    import CustomButton from '../components/CustomButton';
+    import { useState } from 'react';
+
+    const MyForm = () => {
+        const [isSubmitting, setIsSubmitting] = useState(false);
+
+        return (
+            <CustomButton 
+                title="Submit" 
+                onPress={handleSubmit}
+                disabled={isSubmitting}
+            />
+        );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Component Source
+
+Location: `~/workspace/source/components/CustomButton.tsx:8-17`
+
+```typescript
+const CustomButton = ({ title, ...props }: CustomButtonProps) => {
+    return (
+        <TouchableOpacity
+            className="bg-primary rounded-full py-4 items-center shadow-md active:opacity-80"
+            {...props}
+        >
+            <Text className="text-white text-lg font-roboto-bold">{title}</Text>
+        </TouchableOpacity>
+    );
+};
+```
+
+<Note>
+  The component spreads all additional `TouchableOpacityProps`, giving you full access to React Native's TouchableOpacity API including `testID`, `accessible`, `activeOpacity`, and more.
+</Note>
+
+<Tip>
+  Use the `disabled` prop to prevent user interactions during async operations like form submissions or API calls.
+</Tip>
+
+## Accessibility
+
+The button inherits accessibility features from `TouchableOpacity`. For better accessibility, consider adding:
+
+```typescript
+<CustomButton 
+    title="Submit"
+    accessibilityLabel="Submit form"
+    accessibilityHint="Double tap to submit the form"
+/>
+```
+
+## See Also
+
+- [CustomInput](/components/custom-input) - Text input component
+- [ScreenLayout](/components/screen-layout) - Screen container component

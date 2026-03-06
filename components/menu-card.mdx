@@ -1,0 +1,274 @@
+---
+title: MenuCard
+description: A touchable card component with icon and title for navigation menus
+---
+
+## Overview
+
+The `MenuCard` component is a stylized touchable card designed for dashboard menus and navigation grids. It displays a large icon with a title and provides visual feedback on press.
+
+## Import
+
+```typescript
+import MenuCard from '../components/MenuCard';
+```
+
+## Props
+
+<ParamField path="title" type="string" required>
+  The text displayed below the icon
+</ParamField>
+
+<ParamField path="Icon" type="LucideIcon" required>
+  A Lucide React Native icon component (not an instance, but the component itself)
+</ParamField>
+
+<ParamField path="onPress" type="() => void">
+  Callback function triggered when the card is pressed
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+import { LucideIcon } from 'lucide-react-native';
+
+interface MenuCardProps {
+    title: string;
+    Icon: LucideIcon;
+    onPress?: () => void;
+}
+```
+
+## Styling
+
+The card includes these default styles:
+- **Border**: Light primary color border with 20% opacity
+- **Background**: White with gray background on active press
+- **Shape**: Large rounded corners (`rounded-2xl`)
+- **Padding**: 6 units all around, 2 units margin
+- **Icon**: 64px size, primary color (`#C91843`), 1.5 stroke width
+- **Text**: Secondary color, bold Roboto font, large size, centered
+- **Shadow**: Small shadow for subtle depth
+- **Layout**: Flex-1 for equal sizing in rows
+
+## Usage Examples
+
+<Tabs>
+  <Tab title="Dashboard Grid">
+    ```typescript
+    import MenuCard from '../components/MenuCard';
+    import { User, FileText } from 'lucide-react-native';
+    import { View } from 'react-native';
+
+    const Dashboard = () => {
+        return (
+            <View className="space-y-4">
+                <View className="flex-row">
+                    <MenuCard
+                        title="Configuración de cuenta"
+                        Icon={User}
+                        onPress={() => console.log('Configuración press')}
+                    />
+                </View>
+
+                <View className="flex-row">
+                    <MenuCard
+                        title="Documentos"
+                        Icon={FileText}
+                        onPress={() => console.log('Documentos press')}
+                    />
+                </View>
+            </View>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Two Column Layout">
+    ```typescript
+    import MenuCard from '../components/MenuCard';
+    import { Settings, Bell, Shield, HelpCircle } from 'lucide-react-native';
+    import { View } from 'react-native';
+
+    const MenuGrid = () => {
+        return (
+            <View className="space-y-4">
+                <View className="flex-row">
+                    <MenuCard
+                        title="Settings"
+                        Icon={Settings}
+                        onPress={() => navigate('/settings')}
+                    />
+                    <MenuCard
+                        title="Notifications"
+                        Icon={Bell}
+                        onPress={() => navigate('/notifications')}
+                    />
+                </View>
+                
+                <View className="flex-row">
+                    <MenuCard
+                        title="Privacy"
+                        Icon={Shield}
+                        onPress={() => navigate('/privacy')}
+                    />
+                    <MenuCard
+                        title="Help"
+                        Icon={HelpCircle}
+                        onPress={() => navigate('/help')}
+                    />
+                </View>
+            </View>
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="With Navigation">
+    ```typescript
+    import MenuCard from '../components/MenuCard';
+    import { useRouter } from 'expo-router';
+    import { FileText } from 'lucide-react-native';
+
+    const Menu = () => {
+        const router = useRouter();
+
+        return (
+            <MenuCard
+                title="Documents"
+                Icon={FileText}
+                onPress={() => router.push('/documents')}
+            />
+        );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Real-World Example
+
+From `~/workspace/source/app/dashboard.tsx:14-30`:
+
+```typescript
+import { FileText, User } from 'lucide-react-native';
+import MenuCard from '../components/MenuCard';
+import ScreenLayout from '../components/ScreenLayout';
+import { View } from 'react-native';
+
+const Dashboard = () => {
+    return (
+        <ScreenLayout paddingHorizontal={4}>
+            <Logo className="mt-8 mb-12" />
+
+            {/* Opciones del menú */}
+            <View className="space-y-4">
+                <View className="flex-row">
+                    <MenuCard
+                        title="Configuración de cuenta"
+                        Icon={User}
+                        onPress={() => console.log('Configuración press')}
+                    />
+                </View>
+
+                <View className="flex-row">
+                    <MenuCard
+                        title="Documentos"
+                        Icon={FileText}
+                        onPress={() => console.log('Documentos press')}
+                    />
+                </View>
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+## Component Source
+
+Location: `~/workspace/source/components/MenuCard.tsx:11-25`
+
+```typescript
+const MenuCard = ({ title, Icon, onPress }: MenuCardProps) => {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            className="flex-1 border border-primary/20 bg-white rounded-2xl p-6 items-center shadow-sm active:bg-gray-50 m-2"
+        >
+            <View className="mb-4">
+                <Icon size={64} color="#C91843" strokeWidth={1.5} />
+            </View>
+            <Text className="text-secondary font-roboto-bold text-center text-lg">
+                {title}
+            </Text>
+        </TouchableOpacity>
+    );
+};
+```
+
+<Note>
+  The `Icon` prop expects a Lucide icon component (capital I), not an icon instance. Pass the component itself, and MenuCard will render it with the appropriate props.
+</Note>
+
+<Tip>
+  Wrap MenuCards in a `flex-row` container to create horizontal layouts. The `flex-1` class ensures equal width distribution.
+</Tip>
+
+## Available Lucide Icons
+
+Popular icons for menu cards:
+- `User` - Account and profile
+- `FileText` - Documents and files
+- `Settings` - Configuration
+- `Bell` - Notifications
+- `Shield` - Security and privacy
+- `HelpCircle` - Help and support
+- `CreditCard` - Payments
+- `Calendar` - Events and scheduling
+- `MapPin` - Location services
+- `Package` - Orders and deliveries
+
+## Layout Patterns
+
+### Single Column
+```typescript
+<View className="flex-row">
+    <MenuCard title="Item" Icon={User} />
+</View>
+```
+
+### Two Columns
+```typescript
+<View className="flex-row">
+    <MenuCard title="Item 1" Icon={User} />
+    <MenuCard title="Item 2" Icon={FileText} />
+</View>
+```
+
+### Three Columns
+```typescript
+<View className="flex-row">
+    <MenuCard title="Item 1" Icon={User} />
+    <MenuCard title="Item 2" Icon={FileText} />
+    <MenuCard title="Item 3" Icon={Settings} />
+</View>
+```
+
+## Accessibility
+
+Add accessibility props for better screen reader support:
+
+```typescript
+<TouchableOpacity
+    accessibilityRole="button"
+    accessibilityLabel="Account settings"
+    accessibilityHint="Navigate to account settings screen"
+>
+    {/* MenuCard content */}
+</TouchableOpacity>
+```
+
+## See Also
+
+- [ScreenLayout](/components/screen-layout) - Screen container component
+- [Logo](/components/logo) - Logo component
+- [Lucide Icons](https://lucide.dev/icons/) - Complete icon reference

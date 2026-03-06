@@ -1,0 +1,531 @@
+---
+title: 'Theming'
+description: 'Theming and customization with NativeWind and Tailwind CSS in DriveLoop Mobile'
+icon: 'palette'
+---
+
+## Overview
+
+DriveLoop Mobile uses **NativeWind** to bring Tailwind CSS utility classes to React Native. The theme is defined in `tailwind.config.js` and includes custom colors and typography that reflect the DriveLoop brand.
+
+## Color System
+
+The app uses a carefully crafted color palette centered around a vibrant primary red.
+
+### Primary Colors
+
+<Tabs>
+  <Tab title="Primary">
+    ```js
+    primary: {
+      DEFAULT: "#C91843",
+      dark: "#9B1B39",
+      deep: "#870027",
+    }
+    ```
+    
+    The signature DriveLoop red used for buttons, links, and brand elements.
+    
+    <Note>
+      **DEFAULT** (#C91843) is used for primary CTAs and interactive elements.
+      **dark** (#9B1B39) provides hover states and emphasis.
+      **deep** (#870027) offers maximum contrast for critical elements.
+    </Note>
+  </Tab>
+  
+  <Tab title="Secondary">
+    ```js
+    secondary: "#282828"
+    ```
+    
+    Dark gray used for primary text and headings throughout the app.
+  </Tab>
+  
+  <Tab title="Accent">
+    ```js
+    accent: "#111111"
+    ```
+    
+    Near-black used for maximum contrast elements and icons.
+  </Tab>
+</Tabs>
+
+### Tailwind Config
+
+The complete theme configuration from `tailwind.config.js`:
+
+```js tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}"
+  ],
+  presets: [require("nativewind/preset")],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#C91843",
+          dark: "#9B1B39",
+          deep: "#870027",
+        },
+        secondary: "#282828",
+        accent: "#111111",
+      },
+      fontFamily: {
+        'roboto-bold': ['Roboto-Bold', 'sans-serif'],
+        'roboto-light': ['Roboto-Light', 'sans-serif'],
+        'roboto-medium': ['Roboto-Medium', 'sans-serif'],
+      }
+    },
+  },
+  plugins: [],
+}
+```
+
+## Color Usage Examples
+
+### Primary Color
+
+```tsx
+// Button background
+<TouchableOpacity className="bg-primary rounded-full py-4">
+  <Text className="text-white font-roboto-bold">Iniciar sesión</Text>
+</TouchableOpacity>
+
+// Text links
+<Text className="text-primary font-roboto-bold">Regístrate</Text>
+
+// Icons
+<Icon size={64} color="#C91843" />
+
+// Borders with opacity
+<View className="border border-primary/20 rounded-2xl" />
+```
+
+### Secondary Color
+
+```tsx
+// Headings
+<Text className="text-xl font-roboto-bold text-secondary">Registro</Text>
+
+// Body text
+<Text className="text-secondary font-roboto-bold text-lg">
+  Configuración de cuenta
+</Text>
+
+// Input text
+<TextInput className="text-base font-roboto-light text-secondary" />
+```
+
+### Accent Color
+
+```tsx
+// Icons
+<MaterialIcons name="arrow-back" size={24} color="#111111" />
+
+// High contrast elements
+<Text className="text-accent font-roboto-bold">Important Text</Text>
+```
+
+## Typography System
+
+DriveLoop Mobile uses **Roboto** as its primary typeface with three weights.
+
+### Font Loading
+
+Fonts are loaded in the root layout (`app/_layout.tsx`):
+
+```tsx app/_layout.tsx
+import { useFonts } from 'expo-font';
+import { SplashScreen } from 'expo-router';
+
+const RootLayout = () => {
+    const [fontsLoaded, error] = useFonts({
+        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
+    });
+
+    useEffect(() => {
+        if (error) throw error;
+        if (fontsLoaded) SplashScreen.hideAsync();
+    });
+
+    if (!fontsLoaded && !error) return null;
+
+    return <Slot />
+}
+```
+
+<Warning>
+  The splash screen is kept visible until fonts are fully loaded to prevent FOUT (Flash of Unstyled Text).
+</Warning>
+
+### Font Weights
+
+<CardGroup cols={3}>
+  <Card title="Roboto Bold" icon="bold">
+    ```tsx
+    font-roboto-bold
+    ```
+    
+    Used for headings, buttons, and emphasized text.
+  </Card>
+  
+  <Card title="Roboto Light" icon="feather">
+    ```tsx
+    font-roboto-light
+    ```
+    
+    Used for body text, labels, and subtle information.
+  </Card>
+  
+  <Card title="Roboto Medium" icon="text">
+    ```tsx
+    font-roboto-medium
+    ```
+    
+    Available for medium-weight text needs.
+  </Card>
+</CardGroup>
+
+### Typography Examples
+
+```tsx
+// Page titles
+<Text className="text-xl font-roboto-bold text-secondary">Registro</Text>
+
+// Button text
+<Text className="text-white text-lg font-roboto-bold">Iniciar sesión</Text>
+
+// Body text
+<Text className="text-gray-500 font-roboto-light">
+  ¿No tienes una cuenta?
+</Text>
+
+// Links
+<Text className="text-primary font-roboto-bold text-sm">Clic aquí</Text>
+
+// Card titles
+<Text className="text-secondary font-roboto-bold text-center text-lg">
+  Configuración de cuenta
+</Text>
+```
+
+## Component Styling Patterns
+
+### CustomButton Component
+
+```tsx components/CustomButton.tsx
+const CustomButton = ({ title, ...props }: CustomButtonProps) => {
+    return (
+        <TouchableOpacity
+            className="bg-primary rounded-full py-4 items-center shadow-md active:opacity-80"
+            {...props}
+        >
+            <Text className="text-white text-lg font-roboto-bold">{title}</Text>
+        </TouchableOpacity>
+    );
+};
+```
+
+<Tabs>
+  <Tab title="Colors">
+    - `bg-primary` - Primary red background
+    - `text-white` - White text for contrast
+  </Tab>
+  
+  <Tab title="Shape">
+    - `rounded-full` - Fully rounded pill shape
+    - `py-4` - Vertical padding for touch target
+  </Tab>
+  
+  <Tab title="Effects">
+    - `shadow-md` - Medium shadow for depth
+    - `active:opacity-80` - Press state feedback
+  </Tab>
+  
+  <Tab title="Typography">
+    - `text-lg` - Large text size
+    - `font-roboto-bold` - Bold weight
+  </Tab>
+</Tabs>
+
+### CustomInput Component
+
+```tsx components/CustomInput.tsx
+const CustomInput = ({ icon, ...props }: CustomInputProps) => {
+    return (
+        <View className="flex-row items-center border-b border-gray-300 py-2 mb-4">
+            {icon && <View className="mr-3">{icon}</View>}
+            <TextInput
+                className="flex-1 text-base font-roboto-light text-secondary"
+                placeholderTextColor="#9CA3AF"
+                {...props}
+            />
+        </View>
+    );
+};
+```
+
+<Note>
+  Input fields use a bottom border design (`border-b`) instead of full borders for a cleaner, more modern look.
+</Note>
+
+### MenuCard Component
+
+```tsx components/MenuCard.tsx
+const MenuCard = ({ title, Icon, onPress }: MenuCardProps) => {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            className="flex-1 border border-primary/20 bg-white rounded-2xl p-6 items-center shadow-sm active:bg-gray-50 m-2"
+        >
+            <View className="mb-4">
+                <Icon size={64} color="#C91843" strokeWidth={1.5} />
+            </View>
+            <Text className="text-secondary font-roboto-bold text-center text-lg">
+                {title}
+            </Text>
+        </TouchableOpacity>
+    );
+};
+```
+
+<Tip>
+  The `border-primary/20` class uses Tailwind's opacity modifier to create a subtle 20% opacity primary border.
+</Tip>
+
+## Spacing and Layout
+
+DriveLoop uses NativeWind's spacing utilities consistently:
+
+```tsx
+// Vertical spacing between elements
+<View className="space-y-4">
+  <CustomInput placeholder="Email" />
+  <CustomInput placeholder="Password" />
+</View>
+
+// Margins
+<Logo className="mt-10 mb-12" />
+<View className="mt-8" />
+
+// Padding
+<ScreenLayout paddingHorizontal={6}>
+  {/* Content with px-6 padding */}
+</ScreenLayout>
+
+// Flex layouts
+<View className="flex-row justify-between items-center" />
+```
+
+### Spacing Scale
+
+<CardGroup cols={4}>
+  <Card title="2 (8px)" icon="1">
+    Tight spacing between related elements
+  </Card>
+  
+  <Card title="4 (16px)" icon="2">
+    Standard spacing between form fields
+  </Card>
+  
+  <Card title="6 (24px)" icon="3">
+    Screen horizontal padding
+  </Card>
+  
+  <Card title="8-12 (32-48px)" icon="4">
+    Section spacing and logo margins
+  </Card>
+</CardGroup>
+
+## Customizing the Theme
+
+### Adding Custom Colors
+
+```js tailwind.config.js
+theme: {
+  extend: {
+    colors: {
+      primary: {
+        DEFAULT: "#C91843",
+        dark: "#9B1B39",
+        deep: "#870027",
+        light: "#E63959",  // Add lighter variant
+      },
+      success: "#10B981",   // Add success color
+      warning: "#F59E0B",   // Add warning color
+      error: "#EF4444",     // Add error color
+    },
+  },
+},
+```
+
+### Adding Custom Font Sizes
+
+```js tailwind.config.js
+theme: {
+  extend: {
+    fontSize: {
+      'xs': '12px',
+      'sm': '14px',
+      'base': '16px',
+      'lg': '18px',
+      'xl': '20px',
+      '2xl': '24px',
+      '3xl': '30px',
+    },
+  },
+},
+```
+
+### Adding Custom Spacing
+
+```js tailwind.config.js
+theme: {
+  extend: {
+    spacing: {
+      '18': '72px',
+      '88': '352px',
+      '128': '512px',
+    },
+  },
+},
+```
+
+## Dark Mode Support
+
+<Note>
+  DriveLoop Mobile currently uses a light theme. To add dark mode support, extend the theme configuration:
+</Note>
+
+```js tailwind.config.js
+theme: {
+  extend: {
+    colors: {
+      dark: {
+        bg: "#1F2937",
+        text: "#F9FAFB",
+        card: "#374151",
+      },
+    },
+  },
+},
+```
+
+Then use dark mode variants:
+
+```tsx
+<View className="bg-white dark:bg-dark-bg">
+  <Text className="text-secondary dark:text-dark-text">
+    Content
+  </Text>
+</View>
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Use theme colors consistently">
+    Always use theme colors (`primary`, `secondary`, `accent`) instead of arbitrary hex values.
+  </Step>
+  
+  <Step title="Maintain contrast ratios">
+    Ensure text has sufficient contrast against backgrounds (WCAG AA minimum: 4.5:1).
+  </Step>
+  
+  <Step title="Use opacity modifiers">
+    Use Tailwind's opacity modifiers (`primary/20`) for subtle variations.
+  </Step>
+  
+  <Step title="Test on multiple devices">
+    Colors may appear different on iOS vs Android. Test on both platforms.
+  </Step>
+</Steps>
+
+## Common Styling Patterns
+
+### Card with Shadow
+
+```tsx
+<View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+  {/* Card content */}
+</View>
+```
+
+### Primary Button
+
+```tsx
+<TouchableOpacity className="bg-primary rounded-full py-4 px-8 active:opacity-80">
+  <Text className="text-white font-roboto-bold text-center">Button Text</Text>
+</TouchableOpacity>
+```
+
+### Input Field
+
+```tsx
+<TextInput 
+  className="border-b border-gray-300 py-2 text-base font-roboto-light text-secondary"
+  placeholderTextColor="#9CA3AF"
+/>
+```
+
+### Heading
+
+```tsx
+<Text className="text-2xl font-roboto-bold text-secondary mb-4">
+  Page Title
+</Text>
+```
+
+## Icon Styling
+
+### Material Icons
+
+```tsx
+import { MaterialIcons } from '@expo/vector-icons';
+
+// Gray icon (inactive)
+<MaterialIcons name="mail-outline" size={20} color="#6B7280" />
+
+// Primary icon (active)
+<MaterialIcons name="arrow-back" size={24} color="#C91843" />
+
+// Accent icon (high contrast)
+<MaterialIcons name="close" size={24} color="#111111" />
+```
+
+### Lucide Icons
+
+```tsx
+import { User } from 'lucide-react-native';
+
+<User size={64} color="#C91843" strokeWidth={1.5} />
+```
+
+<Tip>
+  Use `strokeWidth={1.5}` for Lucide icons to match the visual weight of Material Icons.
+</Tip>
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="NativeWind Docs" icon="wind" href="https://www.nativewind.dev">
+    Official NativeWind documentation and guides
+  </Card>
+  
+  <Card title="Tailwind CSS" icon="css3" href="https://tailwindcss.com/docs">
+    Complete Tailwind CSS utility reference
+  </Card>
+  
+  <Card title="Expo Font" icon="font" href="https://docs.expo.dev/versions/latest/sdk/font/">
+    Loading custom fonts with expo-font
+  </Card>
+  
+  <Card title="Material Icons" icon="icons" href="https://icons.expo.fyi">
+    Browse available Material Icons
+  </Card>
+</CardGroup>

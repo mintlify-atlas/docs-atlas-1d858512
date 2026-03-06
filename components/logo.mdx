@@ -1,0 +1,311 @@
+---
+title: Logo
+description: A reusable logo component with flexible sizing options
+---
+
+## Overview
+
+The `Logo` component displays the DriveLoop app logo with customizable dimensions. It centers the image and handles both numeric and string-based sizing.
+
+## Import
+
+```typescript
+import Logo from '../components/Logo';
+```
+
+## Props
+
+The component extends all `ViewProps` from React Native, plus the following:
+
+<ParamField path="width" type="number | string" default="192">
+  The width of the logo. Can be a number (pixels) or a Tailwind class string
+</ParamField>
+
+<ParamField path="height" type="number | string" default="96">
+  The height of the logo. Can be a number (pixels) or a Tailwind class string
+</ParamField>
+
+<ParamField path="style" type="StyleProp<ViewStyle>">
+  Additional styles for the container View
+</ParamField>
+
+<ParamField path="className" type="string">
+  Tailwind CSS classes for additional styling (spacing, etc.)
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+import { ViewProps } from 'react-native';
+
+interface LogoProps extends ViewProps {
+    width?: number | string;
+    height?: number | string;
+}
+```
+
+## Features
+
+- **Flexible Sizing**: Accepts both numeric (pixels) and string (Tailwind) values
+- **Centered Layout**: Logo is automatically centered in its container
+- **Aspect Ratio**: Uses `resizeMode="contain"` to preserve aspect ratio
+- **Asset Management**: Loads from local assets directory
+
+## Usage Examples
+
+<Tabs>
+  <Tab title="Default Size">
+    ```typescript
+    import Logo from '../components/Logo';
+
+    const Header = () => {
+        return (
+            <Logo />
+            // Renders at 192x96 pixels
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Custom Numeric Size">
+    ```typescript
+    import Logo from '../components/Logo';
+
+    const SmallLogo = () => {
+        return (
+            <Logo width={128} height={64} />
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="With Spacing">
+    ```typescript
+    import Logo from '../components/Logo';
+
+    const HeaderLogo = () => {
+        return (
+            <Logo className="mt-10 mb-12" />
+        );
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Large Logo">
+    ```typescript
+    import Logo from '../components/Logo';
+
+    const SplashScreen = () => {
+        return (
+            <View className="flex-1 justify-center items-center">
+                <Logo width={256} height={128} />
+            </View>
+        );
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Real-World Examples
+
+### Login Screen
+
+From `~/workspace/source/app/login.tsx:16`:
+
+```typescript
+import Logo from '../components/Logo';
+import ScreenLayout from '../components/ScreenLayout';
+
+const Login = () => {
+    return (
+        <ScreenLayout>
+            <Logo className="mt-10 mb-12" />
+            {/* Rest of login form */}
+        </ScreenLayout>
+    );
+};
+```
+
+### Register Screen
+
+From `~/workspace/source/app/register.tsx:27`:
+
+```typescript
+import Logo from '../components/Logo';
+import ScreenLayout from '../components/ScreenLayout';
+import { View, Text } from 'react-native';
+
+const Register = () => {
+    return (
+        <ScreenLayout>
+            {/* Header */}
+            <View className="flex-row items-center mt-4">
+                <TouchableOpacity onPress={() => router.back()}>
+                    <MaterialIcons name="arrow-back" size={24} />
+                </TouchableOpacity>
+                <View className="flex-1 items-center mr-8">
+                    <Text className="text-xl font-roboto-bold">Registro</Text>
+                </View>
+            </View>
+
+            <Logo className="mt-6 mb-8" />
+            {/* Rest of registration form */}
+        </ScreenLayout>
+    );
+};
+```
+
+### Dashboard Screen
+
+From `~/workspace/source/app/dashboard.tsx:11`:
+
+```typescript
+import Logo from '../components/Logo';
+import ScreenLayout from '../components/ScreenLayout';
+import MenuCard from '../components/MenuCard';
+import { View } from 'react-native';
+
+const Dashboard = () => {
+    return (
+        <ScreenLayout paddingHorizontal={4}>
+            <Logo className="mt-8 mb-12" />
+
+            {/* Menu options */}
+            <View className="space-y-4">
+                {/* MenuCards... */}
+            </View>
+        </ScreenLayout>
+    );
+};
+```
+
+## Component Source
+
+Location: `~/workspace/source/components/Logo.tsx:9-23`
+
+```typescript
+const Logo = ({ width = 192, height = 96, style, ...props }: LogoProps) => {
+    return (
+        <View className="items-center" style={style} {...props}>
+            <Image
+                source={require('../assets/images/logo.png')}
+                style={{
+                    width: typeof width === 'number' ? width : undefined,
+                    height: typeof height === 'number' ? height : undefined
+                }}
+                className={typeof width === 'string' ? width : ''}
+                resizeMode="contain"
+            />
+        </View>
+    );
+};
+```
+
+<Note>
+  The component intelligently handles both numeric and string width/height values. Numeric values set inline styles (pixels), while string values are passed as className for Tailwind utilities.
+</Note>
+
+<Tip>
+  The `resizeMode="contain"` ensures your logo maintains its aspect ratio and fits within the specified dimensions without distortion.
+</Tip>
+
+## Sizing Strategies
+
+### Fixed Pixel Sizes
+Best for:
+- Consistent branding across screens
+- Precise design requirements
+- Icons and small logos
+
+```typescript
+<Logo width={128} height={64} />
+```
+
+### Responsive with Tailwind
+Best for:
+- Adaptive layouts
+- Responsive designs
+- Dynamic content
+
+```typescript
+<Logo width="w-48" height="h-24" />
+```
+
+## Common Logo Sizes
+
+| Use Case | Width | Height | Example |
+|----------|-------|--------|----------|
+| Default | 192 | 96 | Auth screens |
+| Small | 96 | 48 | Navigation bars |
+| Medium | 128 | 64 | Headers |
+| Large | 256 | 128 | Splash screen |
+| Extra Large | 320 | 160 | Onboarding |
+
+## Asset Requirements
+
+The logo asset should be located at:
+```
+~/workspace/source/assets/images/logo.png
+```
+
+For best results:
+- Use PNG format with transparency
+- Provide @2x and @3x versions for retina displays
+- Maintain a 2:1 aspect ratio (width:height)
+- Optimize file size for mobile
+
+## Styling with className
+
+Common spacing utilities:
+
+```typescript
+// Top margin
+<Logo className="mt-4" />   // 16px top margin
+<Logo className="mt-8" />   // 32px top margin
+<Logo className="mt-10" />  // 40px top margin
+
+// Bottom margin
+<Logo className="mb-6" />   // 24px bottom margin
+<Logo className="mb-12" />  // 48px bottom margin
+
+// Vertical margin
+<Logo className="my-8" />   // 32px vertical margin
+
+// Combined
+<Logo className="mt-10 mb-12" />  // Different top/bottom
+```
+
+## Accessibility
+
+For better accessibility, wrap with accessibility props:
+
+```typescript
+<View accessible accessibilityLabel="DriveLoop logo">
+    <Logo />
+</View>
+```
+
+Or add to the Logo component:
+```typescript
+<Logo 
+    accessible
+    accessibilityLabel="DriveLoop logo"
+    accessibilityRole="image"
+/>
+```
+
+## Performance Tips
+
+<Tip>
+  The logo uses `require()` for static asset loading, which is optimized by Metro bundler. The image is bundled with your app for instant display.
+</Tip>
+
+<Note>
+  If you need to load logos dynamically from a URL, modify the component to accept a `source` prop and use `{ uri: 'https://...' }` format.
+</Note>
+
+## See Also
+
+- [ScreenLayout](/components/screen-layout) - Screen container component
+- [React Native Image](https://reactnative.dev/docs/image) - Image component docs
+- [Expo Asset](https://docs.expo.dev/versions/latest/sdk/asset/) - Asset management

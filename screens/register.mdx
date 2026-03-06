@@ -1,0 +1,216 @@
+---
+title: 'Register Screen'
+description: 'New user registration screen with multi-field form'
+icon: 'user-plus'
+---
+
+## Overview
+
+The Register screen allows new users to create an account in DriveLoop Mobile. It features a comprehensive registration form with validation fields and terms acceptance.
+
+**Route Path:** `/register`
+
+## Screen Structure
+
+<Steps>
+  <Step title="Header Navigation">
+    Displays a back button to return to the previous screen and a centered "Registro" title.
+  </Step>
+  
+  <Step title="Logo Display">
+    Shows the DriveLoop logo with reduced margin spacing.
+  </Step>
+  
+  <Step title="Registration Form">
+    Multi-field form including name, last name, email, password, and password confirmation.
+  </Step>
+  
+  <Step title="Terms Acceptance">
+    Interactive checkbox for accepting terms and conditions.
+  </Step>
+  
+  <Step title="Register Button">
+    Primary action button to submit the registration form.
+  </Step>
+</Steps>
+
+## Components Used
+
+<CardGroup cols={2}>
+  <Card title="ScreenLayout" icon="layout">
+    Wraps the screen with safe area handling and scrollable container.
+  </Card>
+  
+  <Card title="Logo" icon="image">
+    Displays the DriveLoop branding logo.
+  </Card>
+  
+  <Card title="CustomInput" icon="input-text">
+    Styled text input with icon support for all form fields.
+  </Card>
+  
+  <Card title="CustomButton" icon="hand-pointer">
+    Primary action button for form submission.
+  </Card>
+</CardGroup>
+
+## Form Fields
+
+The registration form includes five input fields:
+
+```tsx
+<CustomInput
+    placeholder="Nombre"
+    icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+/>
+
+<CustomInput
+    placeholder="Apellido"
+    icon={<MaterialIcons name="person-outline" size={20} color="#6B7280" />}
+/>
+
+<CustomInput
+    placeholder="Correo electrónico"
+    keyboardType="email-address"
+    icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+/>
+
+<CustomInput
+    placeholder="Contraseña"
+    secureTextEntry
+    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+/>
+
+<CustomInput
+    placeholder="Confirmar contraseña"
+    secureTextEntry
+    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+/>
+```
+
+### Field Details
+
+<CardGroup cols={2}>
+  <Card title="Nombre (First Name)" icon="user">
+    Uses `person-outline` icon from Material Icons
+  </Card>
+  
+  <Card title="Apellido (Last Name)" icon="user">
+    Uses `person-outline` icon from Material Icons
+  </Card>
+  
+  <Card title="Email" icon="envelope">
+    Email keyboard type with `mail-outline` icon
+  </Card>
+  
+  <Card title="Password" icon="lock">
+    Secure text entry with `lock-outline` icon
+  </Card>
+  
+  <Card title="Confirm Password" icon="lock">
+    Secure text entry for password verification
+  </Card>
+</CardGroup>
+
+## State Management
+
+The screen uses React state to manage the terms and conditions acceptance:
+
+```tsx
+const [accepted, setAccepted] = useState(false);
+```
+
+This state controls the checkbox appearance and can be used for form validation before submission.
+
+## Terms and Conditions
+
+Interactive checkbox component for user consent:
+
+```tsx
+<TouchableOpacity
+    className="flex-row items-center mt-4"
+    onPress={() => setAccepted(!accepted)}
+>
+    <MaterialCommunityIcons
+        name={accepted ? "checkbox-marked" : "checkbox-blank-outline"}
+        size={24}
+        color={accepted ? "#C91843" : "#6B7280"}
+    />
+    <Text className="ml-3 text-gray-500 text-sm font-roboto-light">
+        Acepto los <Text className="text-blue-400">términos y condiciones</Text>
+    </Text>
+</TouchableOpacity>
+```
+
+<Note>
+  The checkbox changes from `checkbox-blank-outline` to `checkbox-marked` when accepted, with color changing from gray to the primary brand color (#C91843).
+</Note>
+
+## Navigation
+
+### Back Navigation
+```tsx
+<TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2">
+    <MaterialIcons name="arrow-back" size={24} color="#111111" />
+</TouchableOpacity>
+```
+
+The header includes a back button that calls `router.back()` to return to the login screen.
+
+### Register Action
+```tsx
+<CustomButton 
+    title="Registrarse" 
+    onPress={() => console.log('Register press')} 
+/>
+```
+
+<Info>
+  The registration button currently logs to console. In production, this should handle form validation and API calls to create the user account.
+</Info>
+
+## Header Layout
+
+The custom header combines navigation and title:
+
+```tsx
+<View className="flex-row items-center mt-4">
+    <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2">
+        <MaterialIcons name="arrow-back" size={24} color="#111111" />
+    </TouchableOpacity>
+    <View className="flex-1 items-center mr-8">
+        <Text className="text-xl font-roboto-bold text-secondary">Registro</Text>
+    </View>
+</View>
+```
+
+This creates a balanced layout with the back button on the left and centered title.
+
+## Styling
+
+Key styling classes used:
+
+- **Header:** `flex-row items-center mt-4` for horizontal layout
+- **Title:** `text-xl font-roboto-bold text-secondary` for prominence
+- **Logo:** `mt-6 mb-8` for reduced spacing compared to login
+- **Form:** `space-y-2` for tighter field spacing
+- **Button container:** `mt-10 mb-8` for spacing at bottom
+- **Terms text:** `text-gray-500 text-sm font-roboto-light`
+- **Terms link:** `text-blue-400` for emphasis
+
+## Icon Libraries
+
+The screen uses two icon libraries:
+
+1. **MaterialIcons** - For form field icons (person, mail, lock)
+2. **MaterialCommunityIcons** - For checkbox states
+
+Both are imported from `@expo/vector-icons`.
+
+## Source Code
+
+Location: `app/register.tsx`
+
+<Info>
+  This screen demonstrates form handling patterns and state management for interactive UI elements in React Native.
+</Info>

@@ -1,0 +1,141 @@
+---
+title: 'Login Screen'
+description: 'User authentication screen with email and password input'
+icon: 'right-to-bracket'
+---
+
+## Overview
+
+The Login screen is the primary authentication entry point for DriveLoop Mobile. It handles user login with email and password credentials and provides navigation to the registration flow.
+
+**Route Path:** `/login`
+
+<Info>
+  The app automatically redirects to `/login` from the root path (`/`) as defined in `app/index.tsx`.
+</Info>
+
+## Screen Structure
+
+<Steps>
+  <Step title="Logo Display">
+    Shows the DriveLoop logo at the top of the screen using the `Logo` component with top margin spacing.
+  </Step>
+  
+  <Step title="Login Form">
+    Contains email and password input fields with icons from Material Icons.
+  </Step>
+  
+  <Step title="Forgot Password">
+    Displays a clickable "forgot password" link for account recovery.
+  </Step>
+  
+  <Step title="Login Button">
+    Primary action button that navigates to the dashboard on successful login.
+  </Step>
+  
+  <Step title="Registration Link">
+    Bottom text with link to navigate to the registration screen.
+  </Step>
+</Steps>
+
+## Components Used
+
+<CardGroup cols={2}>
+  <Card title="ScreenLayout" icon="layout">
+    Wraps the screen with safe area handling and scrollable container.
+  </Card>
+  
+  <Card title="Logo" icon="image">
+    Displays the DriveLoop branding logo.
+  </Card>
+  
+  <Card title="CustomInput" icon="input-text">
+    Styled text input with icon support for form fields.
+  </Card>
+  
+  <Card title="CustomButton" icon="hand-pointer">
+    Primary action button with consistent styling.
+  </Card>
+</CardGroup>
+
+## Form Fields
+
+The login form includes two input fields with Material Icons:
+
+```tsx
+<CustomInput
+    placeholder="Correo electrónico"
+    keyboardType="email-address"
+    icon={<MaterialIcons name="mail-outline" size={20} color="#6B7280" />}
+/>
+
+<CustomInput
+    placeholder="Contraseña"
+    secureTextEntry
+    icon={<MaterialIcons name="lock-outline" size={20} color="#6B7280" />}
+/>
+```
+
+### Email Input
+- **Icon:** `mail-outline` from MaterialIcons
+- **Keyboard Type:** Email address
+- **Placeholder:** "Correo electrónico" (Email)
+
+### Password Input
+- **Icon:** `lock-outline` from MaterialIcons
+- **Secure Entry:** Enabled (masks password)
+- **Placeholder:** "Contraseña" (Password)
+
+## Navigation
+
+The screen implements two navigation patterns:
+
+### Login Action
+```tsx
+<CustomButton 
+    title="Iniciar sesión" 
+    onPress={() => router.replace('/dashboard' as any)} 
+/>
+```
+<Note>
+  Uses `router.replace()` to navigate to the dashboard, removing the login screen from the navigation stack.
+</Note>
+
+### Registration Navigation
+```tsx
+<Link href={"/register" as any} asChild>
+    <TouchableOpacity>
+        <Text className="text-primary font-roboto-bold">Regístrate</Text>
+    </TouchableOpacity>
+</Link>
+```
+
+## Features
+
+### Forgot Password
+- Located below the password field
+- "Clic aquí" (Click here) link for password recovery
+- Currently a placeholder TouchableOpacity (implementation needed)
+
+### Registration Prompt
+- Bottom section with text: "¿No tienes una cuenta?" (Don't have an account?)
+- Links to `/register` screen
+- Uses primary color for emphasis
+
+## Styling
+
+The screen uses NativeWind (Tailwind CSS) classes for styling:
+
+- **Logo:** `mt-10 mb-12` for spacing
+- **Form container:** `space-y-4` for vertical spacing
+- **Button container:** `mt-10` for top margin
+- **Text colors:** `text-gray-500` for secondary text, `text-primary` for links
+- **Fonts:** `font-roboto-light` for body text, `font-roboto-bold` for emphasis
+
+## Source Code
+
+Location: `app/login.tsx`
+
+<Info>
+  This screen uses `expo-router` for navigation and Material Icons from `@expo/vector-icons` for UI elements.
+</Info>

@@ -1,0 +1,357 @@
+---
+title: Installation
+description: Install and set up DriveLoop Mobile on your development machine
+---
+
+## Prerequisites
+
+Before installing DriveLoop Mobile, ensure you have the following installed on your system:
+
+<CardGroup cols={2}>
+  <Card title="Node.js" icon="node-js" iconType="duotone">
+    Node.js 18.x or later
+  </Card>
+  <Card title="Package Manager" icon="box" iconType="duotone">
+    npm, yarn, or pnpm
+  </Card>
+  <Card title="Expo CLI" icon="mobile" iconType="duotone">
+    Installed globally or via npx
+  </Card>
+  <Card title="Development Environment" icon="code" iconType="duotone">
+    iOS Simulator, Android Emulator, or Expo Go app
+  </Card>
+</CardGroup>
+
+<Note>
+  DriveLoop Mobile is built with **Expo SDK 54** and **React Native 0.81.5**. Make sure your development environment is compatible with these versions.
+</Note>
+
+## System Requirements
+
+<Tabs>
+  <Tab title="macOS">
+    - macOS 12.0 or later (for iOS development)
+    - Xcode 14.0 or later (for iOS Simulator)
+    - Android Studio (for Android Emulator)
+    - At least 8GB RAM
+  </Tab>
+  <Tab title="Windows">
+    - Windows 10 or later
+    - Android Studio (for Android Emulator)
+    - At least 8GB RAM
+    - Windows Subsystem for Linux (WSL) recommended
+  </Tab>
+  <Tab title="Linux">
+    - Ubuntu 20.04 or later (or equivalent)
+    - Android Studio (for Android Emulator)
+    - At least 8GB RAM
+  </Tab>
+</Tabs>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Clone the Repository">
+    Clone the DriveLoop Mobile repository to your local machine:
+
+    ```bash
+    git clone <repository-url>
+    cd driveloopMovil_test
+    ```
+  </Step>
+
+  <Step title="Install Dependencies">
+    Install all required dependencies using your preferred package manager:
+
+    <CodeGroup>
+      ```bash npm
+      npm install
+      ```
+
+      ```bash yarn
+      yarn install
+      ```
+
+      ```bash pnpm
+      pnpm install
+      ```
+    </CodeGroup>
+
+    <Info>
+      This will install all dependencies including Expo Router, NativeWind (Tailwind CSS for React Native), React Navigation, and other required packages.
+    </Info>
+  </Step>
+
+  <Step title="Verify Installation">
+    Check that all dependencies are installed correctly:
+
+    <CodeGroup>
+      ```bash npm
+      npm list --depth=0
+      ```
+
+      ```bash yarn
+      yarn list --depth=0
+      ```
+
+      ```bash pnpm
+      pnpm list --depth=0
+      ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## Key Dependencies
+
+DriveLoop Mobile uses the following core technologies:
+
+### Core Framework
+
+```json package.json
+{
+  "dependencies": {
+    "expo": "~54.0.33",
+    "react": "19.1.0",
+    "react-native": "0.81.5"
+  }
+}
+```
+
+### Navigation & Routing
+
+The app uses **Expo Router** for file-based routing:
+
+```json package.json
+{
+  "dependencies": {
+    "expo-router": "~6.0.23",
+    "@react-navigation/native": "^7.1.8",
+    "@react-navigation/bottom-tabs": "^7.4.0"
+  }
+}
+```
+
+### Styling
+
+**NativeWind v4** provides Tailwind CSS utility classes:
+
+```json package.json
+{
+  "dependencies": {
+    "nativewind": "^4.2.2",
+    "tailwindcss": "3.4.17"
+  }
+}
+```
+
+### UI & Icons
+
+```json package.json
+{
+  "dependencies": {
+    "lucide-react-native": "^0.577.0",
+    "@expo/vector-icons": "^15.0.3"
+  }
+}
+```
+
+<Tip>
+  The app uses custom Roboto fonts (Bold, Light, and Medium) which are automatically loaded via `expo-font`.
+</Tip>
+
+## Configuration Files
+
+After installation, verify these configuration files are present:
+
+### app.json
+
+Expo configuration with project metadata:
+
+```json app.json
+{
+  "expo": {
+    "name": "driveloopMovil_test",
+    "slug": "driveloopMovil_test",
+    "version": "1.0.0",
+    "newArchEnabled": true,
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
+```
+
+<Info>
+  The app enables Expo's **New Architecture** and experimental features like **typed routes** and **React Compiler** for better performance.
+</Info>
+
+### tailwind.config.js
+
+Tailwind CSS configuration with custom theme:
+
+```javascript tailwind.config.js
+module.exports = {
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}"
+  ],
+  presets: [require("nativewind/preset")],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#C91843",
+          dark: "#9B1B39",
+          deep: "#870027",
+        },
+        secondary: "#282828",
+        accent: "#111111",
+      }
+    }
+  }
+}
+```
+
+### nativewind-env.d.ts
+
+TypeScript types for NativeWind:
+
+```typescript nativewind-env.d.ts
+/// <reference types="nativewind/types" />
+```
+
+## Setting Up Development Environment
+
+### iOS Simulator (macOS only)
+
+<Steps>
+  <Step title="Install Xcode">
+    Download and install Xcode from the Mac App Store.
+  </Step>
+
+  <Step title="Install Command Line Tools">
+    ```bash
+    xcode-select --install
+    ```
+  </Step>
+
+  <Step title="Accept License">
+    ```bash
+    sudo xcodebuild -license accept
+    ```
+  </Step>
+</Steps>
+
+### Android Emulator
+
+<Steps>
+  <Step title="Install Android Studio">
+    Download and install [Android Studio](https://developer.android.com/studio).
+  </Step>
+
+  <Step title="Install Android SDK">
+    Open Android Studio and install:
+    - Android SDK Platform 34 (or latest)
+    - Android SDK Build-Tools
+    - Android Emulator
+  </Step>
+
+  <Step title="Set Environment Variables">
+    Add to your `.bashrc`, `.zshrc`, or equivalent:
+
+    ```bash
+    export ANDROID_HOME=$HOME/Library/Android/sdk
+    export PATH=$PATH:$ANDROID_HOME/emulator
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+    ```
+
+    <Note>
+      On Windows, the Android SDK is typically located at `C:\Users\YourUsername\AppData\Local\Android\Sdk`
+    </Note>
+  </Step>
+
+  <Step title="Create Virtual Device">
+    Open Android Studio > Tools > Device Manager > Create Virtual Device
+  </Step>
+</Steps>
+
+### Expo Go (Easiest Option)
+
+<CardGroup cols={2}>
+  <Card title="iOS" icon="app-store-ios" href="https://apps.apple.com/app/expo-go/id982107779">
+    Download Expo Go from the App Store
+  </Card>
+  <Card title="Android" icon="android" href="https://play.google.com/store/apps/details?id=host.exp.exponent">
+    Download Expo Go from Google Play
+  </Card>
+</CardGroup>
+
+<Warning>
+  Expo Go has limitations and may not support all native modules. For full functionality, use a development build or simulator/emulator.
+</Warning>
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 8081 is already in use:
+
+```bash
+# Kill the process using port 8081
+lsof -ti:8081 | xargs kill -9
+
+# Or start on a different port
+npx expo start --port 8082
+```
+
+### Module Not Found Errors
+
+Clear cache and reinstall:
+
+<CodeGroup>
+  ```bash npm
+  rm -rf node_modules package-lock.json
+  npm install
+  npx expo start --clear
+  ```
+
+  ```bash yarn
+  rm -rf node_modules yarn.lock
+  yarn install
+  npx expo start --clear
+  ```
+
+  ```bash pnpm
+  rm -rf node_modules pnpm-lock.yaml
+  pnpm install
+  npx expo start --clear
+  ```
+</CodeGroup>
+
+### TypeScript Errors
+
+Ensure TypeScript version matches the project:
+
+```bash
+npm install typescript@~5.9.2 --save-dev
+```
+
+### Font Loading Issues
+
+If custom fonts don't load, clear the Expo cache:
+
+```bash
+npx expo start --clear
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Get the app running in minutes
+  </Card>
+  <Card title="Core Concepts" icon="book" href="/concepts/routing">
+    Understand routing, styling, and components
+  </Card>
+</CardGroup>
